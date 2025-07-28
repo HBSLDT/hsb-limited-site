@@ -65,6 +65,19 @@
     .dashboard {
       display: none;
     }
+    .return-link {
+      text-align: center;
+      margin-top: 40px;
+    }
+    .return-link a {
+      color: #25D366;
+      font-size: 18px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .return-link a:hover {
+      text-decoration: underline;
+    }
   </style>
 </head>
 <body>
@@ -106,6 +119,11 @@
     <input type="file" id="contractUpload" />
     <button onclick="uploadContract()">📤 Upload File</button>
     <ul id="contractList"></ul>
+
+    <!-- RETURN BUTTON -->
+    <div class="return-link">
+      🔙 <a href="index.html">Return to Hydra HQ</a>
+    </div>
   </div>
 
   <script>

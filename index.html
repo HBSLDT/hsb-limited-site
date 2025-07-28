@@ -3,40 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hydra HQ</title>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+  <title>Hydra Booking Assistant</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Montserrat', sans-serif;
-      background: linear-gradient(to bottom right, #000000, #121212);
+      font-family: 'Arial', sans-serif;
+      background: #000;
       color: #eee;
       display: flex;
       flex-direction: column;
-      min-height: 100vh;
+      height: 100vh;
     }
     header {
       background: #111;
       padding: 20px;
       text-align: center;
-      font-size: 28px;
+      font-size: 20px;
       font-weight: bold;
-      letter-spacing: 1px;
+      color: #00ffff;
     }
-    .hydra-logo {
-      width: 100px;
-      height: auto;
-      margin: 10px auto;
+    #chat {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
     }
-    nav {
+    .msg {
+      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 10px;
+      max-width: 80%;
+    }
+    .bot {
+      background: #222;
+      align-self: flex-start;
+    }
+    .user {
+      background: #00ffff;
+      color: #000;
+      align-self: flex-end;
+    }
+    #input-area {
       display: flex;
-      justify-content: center;
-      background: #1a1a1a;
-      padding: 10px 0;
+      padding: 10px;
+      background: #111;
     }
-    nav a {
-      color: #eee;
-      text-decoration: none;
-      margin: 0 20px;
+    #input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
       font-size: 16px;
-     
+    }
+    button {
+      margin-left: 10px;
+      padding: 10px 20px;
+      background: #00ffff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<header>Hydra Booking Assistant 🤖</header>
+
+<div id="chat">
+  <div class="msg bot">Welcome to Hydra HQ 👋 Ready to book your session?</div>
+</div>
+
+<div id="input-area">
+  <input type="text" id="input" placeholder="Type here..." />
+  <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+  const chat = document.getElementById("chat");
+  let step = 0;
+  let booking = {
+    day: "",
+    time: ""
+  };
+
+  function addMessage(text, sender) {
+    const msg = document.createElement("div");
+    msg.className = `msg ${sender}`;
+    msg.innerText = text;
+    chat.appendChild(msg);
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  function botReply(text, delay = 600) {
+    setTimeout(() => addMessage(text, "bot"), delay);
+  }
+
+  function sendMessage() {
+    const input = document.getElementById("input");
+    const text = input.value.trim();
+    if (!text) return;
+    addMessage(text, "user");
+    input.value = "";
+
+    if (step === 0) {
+      botReply("Nice one! What day are you looking to train?");
+      step = 1;
+    } else if (step === 1) {
+      booking.day = text;
+      botReply("Cool. And what time?");
+      step = 2;
+    } else if (step === 2) {
+      booking.time = text;
+      const link = `https://wa.me/447825954329?text=Hi%2C%20I%27d%20like%20to%20book%20a%20session%20on%20${encodeURIComponent(booking.day)}%20at%20${encodeURIComponent(booking.time)}.%20Is%20that%20still%20available%3F`;
+      botReply("Give me a sec…");
+      setTimeout(() => {
+        botReply("All done ✅ Tap below to confirm your session on WhatsApp:");
+        const confirm = document.createElement("a");
+        confirm.href = link;
+        confirm.target = "_blank";
+        confirm.innerText = "📲 MessageGlovesUp";
+        confirm.style.color = "#00ffff";
+        confirm.style.display = "block";
+        confirm.style.marginTop = "10px";
+        chat.appendChild(confirm);
+        chat.scrollTop = chat.scrollHeight;
+      }, 1500);
+      step = 3;
+    } else {
+      botReply("Want to book another one? Just type the day!");
+      step = 1;
+    }
+  }
+</script>
+
+</body>
+</html>

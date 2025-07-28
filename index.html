@@ -2,109 +2,58 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hydra HQ – HBS Ltd</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydra HQ – v3.0</title>
+  <script src="availability.js" defer></script>
   <style>
-    :root {
-      --platinum: #e5e4e2;
-      --gold: #ffd700;
-      --rose-gold: #b76e79;
-      --hydra-blue: #00ffff;
-      --bg: #0e0e0e;
-    }
-
     body {
-      margin: 0;
-      padding: 0;
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom right, #000000, #1e1e1e);
+      background: linear-gradient(to right, #0e0e0e, #1c1c1c);
       color: white;
       text-align: center;
-      animation: fadeIn 1s ease-in;
+      padding: 0 20px;
+      margin: 0;
     }
-
     header {
-      padding: 30px 20px 10px;
+      padding-top: 30px;
     }
-
-    img.logo {
-      width: 240px;
-      max-width: 80%;
-      border-radius: 20px;
-      box-shadow: 0 0 20px var(--platinum);
-      animation: popUp 1s ease-out;
+    .logo {
+      width: 200px;
+      margin-bottom: 10px;
     }
-
     h1 {
-      font-size: 2.8em;
-      margin: 20px 0 10px;
-      color: var(--hydra-blue);
-      text-shadow: 0 0 10px var(--hydra-blue);
+      font-size: 2.5em;
+      color: #00ffff;
     }
-
-    p {
-      max-width: 600px;
-      margin: 0 auto 30px;
-      font-size: 1.2em;
-      line-height: 1.6;
-      color: #ccc;
-    }
-
     .btn {
-      background: var(--hydra-blue);
+      background: #00ffff;
       color: #000;
-      padding: 15px 30px;
+      padding: 14px 28px;
+      font-size: 1em;
+      margin: 20px 10px;
       border: none;
       border-radius: 6px;
-      font-size: 1em;
       cursor: pointer;
+      box-shadow: 0 0 12px #00ffff;
       text-decoration: none;
-      box-shadow: 0 0 12px var(--hydra-blue);
-      transition: all 0.3s ease;
-      margin: 15px;
       display: inline-block;
     }
-
     .btn:hover {
       background: white;
       color: black;
-      box-shadow: 0 0 20px white;
     }
-
-    nav {
-      margin-top: 30px;
+    .availability-box {
+      background: #222;
+      padding: 20px;
+      margin: 40px auto;
+      border-radius: 12px;
+      max-width: 400px;
+      box-shadow: 0 0 20px #00ffff40;
     }
-
-    nav a {
-      color: var(--hydra-blue);
-      margin: 0 12px;
-      text-decoration: none;
-      font-size: 1em;
-    }
-
-    nav a:hover {
-      text-decoration: underline;
-    }
-
     footer {
-      font-size: 0.9em;
       margin-top: 60px;
-      color: #777;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(30px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes popUp {
-      0% { transform: scale(0.6); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    @media (max-width: 600px) {
-      h1 { font-size: 2em; }
-      .btn { width: 90%; }
+      color: #888;
+      font-size: 0.9em;
     }
   </style>
 </head>
@@ -112,20 +61,18 @@
 
   <header>
     <img src="hbs.logo.jpeg" alt="Hydra HQ Logo" class="logo" />
-    <h1>Welcome to Hydra HQ</h1>
-    <p>Your elite control panel for Gloves Up, Sales Up, and No Excuse Fitness. Built by HBS Ltd to dominate the game.</p>
-    <a href="https://wa.me/447825954329" class="btn">📲 Book a Session</a>
+    <h1>Hydra HQ – Book Now</h1>
+    <a href="https://wa.me/447825954329" class="btn">📲 Message Gloves Up</a>
+    <a href="admin.html" class="btn">🔐 Admin Login</a>
   </header>
 
-  <nav>
-    <a href="index.html">🏠 Home</a>
-    <a href="ai.html">🤖 Hydra AI (coming soon)</a>
-    <a href="https://noexcusefit.gumroad.com/l/lauiq">📦 Products</a>
-  </nav>
+  <div class="availability-box">
+    <h2>📅 Available Session Times</h2>
+    <div id="availability">Loading schedule...</div>
+  </div>
 
   <footer>
-    HBS Ltd – Believe. Build. Become.<br>
-    Website v2.0 | Next: v3.0 upgrades → say “Upgrade again”
+    HBS Ltd – Website v3.0 | Next: v4.0 → Hidden Hydra AI
   </footer>
 
 </body>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydra Admin Control</title>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: 'Arial', sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      color: crimson;
+      margin-bottom: 30px;
+    }
+    .panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .card {
+      background: #111;
+      border: 2px solid #444;
+      padding: 20px;
+      border-radius: 10px;
+      width: 320px;
+    }
+    .card h2 {
+      color: gold;
+      margin-bottom: 10px;
+    }
+    .card input, .card textarea, .card select {
+      width: 100%;
+      margin-top: 5px;
+      padding: 8px;
+      border-radius: 6px;
+      border: none;
+      background: #222;
+      color: #fff;
+    }
+    .card button {
+      margin-top: 10px;
+      background: crimson;
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 6px;
+      cursor: pointer;
+      width: 100%;
+    }
+    #fileList {
+      margin-top: 10px;
+    }
+    #fileList li {
+      margin: 5px 0;
+    }
+    a {
+      color: lime;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🧠 Hydra HQ – Empire Admin Control Center</h1>
+
+<div class="panel">
+
+  <!-- Seller Editor -->
+  <div class="card">
+    <h2>🧾 Seller Performance</h2>
+    <label>Seller Code:</label>
+    <input id="sellerCode" placeholder="E.g. DR35741" />
+    <label>Sales Made:</label>
+    <input id="salesCount" type="number" />
+    <label>Total Earnings (£):</label>
+    <input id="earnings" type="number" />
+    <button onclick="saveSeller()">Save Stats</button>
+    <p id="sellerOutput"></p>
+  </div>
+
+  <!-- Contract Upload -->
+  <div class="card">
+    <h2>📂 Upload Contracts</h2>
+    <input type="file" id="contractFile" />
+    <button onclick="uploadContract()">Upload</button>
+    <ul id="fileList"></ul>
+  </div>
+
+  <!-- Empire Access Panel -->
+  <div class="card">
+    <h2>🌍 Jump to Pages</h2>
+    <select onchange="navigateTo(this.value)">
+      <option value="">Select Page</option>
+      <option value="index.html">🏠 Homepage</option>
+      <option value="admin.html">🛠 Admin Login</option>
+      <option value="finance-dashboard.html">📊 Finance Panel</option>
+      <option value="booking.html">📅 Booking Times</option>
+    </select>
+    <button onclick="location.reload()">🔄 Refresh Page</button>
+  </div>
+
+</div>
+
+<script>
+  function saveSeller() {
+    const code = document.getElementById("sellerCode").value;
+    const sales = document.getElementById("salesCount").value;
+    const earnings = document.getElementById("earnings").value;
+
+    document.getElementById("sellerOutput").textContent = 
+      `✅ ${code} has ${sales} sales with £${earnings} earnings.`;
+  }
+
+  function uploadContract() {
+    const fileInput = document.getElementById("contractFile");
+    const fileList = document.getElementById("fileList");
+
+    if (fileInput.files.length > 0) {
+      const li = document.createElement("li");
+      li.textContent = `📄 ${fileInput.files[0].name}`;
+      fileList.appendChild(li);
+    } else {
+      alert("Please select a file.");
+    }
+  }
+
+  function navigateTo(url) {
+    if (url) window.location.href = url;
+  }
+</script>
+
+</body>
+</html>

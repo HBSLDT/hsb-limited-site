@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydra AI Assistant</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: #000;
+      color: white;
+    }
+
+    .chatbot-launcher {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #8a2be2;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+      box-shadow: 0 0 12px #8a2be2;
+      z-index: 1000;
+    }
+
+    .chatbox {
+      position: fixed;
+      bottom: 100px;
+      right: 25px;
+      width: 300px;
+      background: #111;
+      border: 2px solid #8a2be2;
+      border-radius: 10px;
+      padding: 15px;
+      display: none;
+      flex-direction: column;
+      z-index: 999;
+    }
+
+    .chatbox h3 {
+      margin: 0 0 10px;
+      color: #8a2be2;
+    }
+
+    .chat-log {
+      height: 200px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+
+    .chat-log p {
+      margin: 5px 0;
+    }
+
+    .chat-input {
+      display: flex;
+    }
+
+    .chat-input input {
+      flex: 1;
+      padding: 6px;
+      border: none;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    .chat-input button {
+      margin-left: 5px;
+      padding: 6px 10px;
+      background: #8a2be2;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      color: white;
+    }
+
+    .whatsapp-link {
+      margin-top: 10px;
+      display: block;
+      text-align: center;
+      color: #25D366;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<div class="chatbot-launcher" onclick="toggleChat()">💬</div>
+
+<div class="chatbox" id="chatbox">
+  <h3>Hydra AI</h3>
+  <div class="chat-log" id="chatlog">
+    <p><strong>Hydra AI:</strong> Hey! Need help booking or want to train?</p>
+  </div>
+  <div class="chat-input">
+    <input type="text" id="userInput" placeholder="Type here..." />
+    <button onclick="respond()">▶</button>
+  </div>
+  <a href="https://wa.me/447825954329" target="_blank" class="whatsapp-link">📲 MessageGlovesUp</a>
+</div>
+
+<script>
+  const chatbox = document.getElementById("chatbox");
+  const chatlog = document.getElementById("chatlog");
+  const input = document.getElementById("userInput");
+
+  function toggleChat() {
+    chatbox.style.display = chatbox.style.display === "flex" ? "none" : "flex";
+  }
+
+  function respond() {
+    const userText = input.value.trim();
+    if (!userText) return;
+    addMessage("You", userText);
+    input.value = "";
+
+    const lower = userText.toLowerCase();
+    let reply = "Hmm, I’m not sure. Try asking something else.";
+
+    if (lower.includes("book") || lower.includes("session")) {
+      reply = "To book a session, hit the green button below or type your preferred time.";
+    } else if (lower.includes("price") || lower.includes("cost")) {
+      reply = "1:1 sessions are £30/hour. Free tasters also available. 💪";
+    } else if (lower.includes("train") || lower.includes("fitness")) {
+      reply = "We offer private boxing sessions, fitness classes, and padwork. What are you after?";
+    } else if (lower.includes("hello") || lower.includes("hi")) {
+      reply = "Hey legend! Ready to train or ask something?";
+    }
+
+    setTimeout(() => addMessage("Hydra AI", reply), 600);
+  }
+
+  function addMessage(sender, text) {
+    const p = document.createElement("p");
+    p.innerHTML = `<strong>${sender}:</strong> ${text}`;
+    chatlog.appendChild(p);
+    chatlog.scrollTop = chatlog.scrollHeight;
+  }
+</script>
+
+</body>
+</html>

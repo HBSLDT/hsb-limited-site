@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hydra HQ – Powered by HBS Ltd</title>
+  <title>Hydra HQ Admin Panel</title>
   <style>
     body {
       margin: 0;
@@ -15,30 +15,93 @@
       background: #111;
       padding: 20px;
       text-align: center;
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
     }
-    .logo {
-      display: block;
+    .input, textarea {
+      width: 90%;
+      max-width: 700px;
       margin: 20px auto;
-      width: 150px;
-    }
-    .section {
-      text-align: center;
-      margin: 30px 20px;
-    }
-    .button {
       display: block;
-      margin: 15px auto;
-      padding: 15px 30px;
-      font-size: 18px;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      max-width: 300px;
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: 1px solid #444;
+      background: #111;
       color: white;
     }
-    .glovesup { background: #E5E4E2; color: black; }
-    .salesup { background: #FFD700; color: black; }
-    .noexcuse { background: #B76E79; }
-    .
+    button {
+      display: block;
+      margin: 15px auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #25D366;
+      color: black;
+      font-weight: bold;
+    }
+    .hidden { display: none; }
+    .footer {
+      text-align: center;
+      margin: 40px 0;
+      font-size: 14px;
+      color: #777;
+    }
+    .back-btn {
+      background: #444;
+      color: white;
+    }
+  </style>
+</head>
+<body onload="loadSchedule()">
+
+  <header>🛡 Hydra HQ Admin Access</header>
+
+  <div id="login-section">
+    <input class="input" type="password" id="adminCode" placeholder="Enter admin code" />
+    <button onclick="checkCode()">✅ Unlock Panel</button>
+  </div>
+
+  <div id="admin-section" class="hidden">
+    <h2 style="text-align:center;">✏️ Edit Weekly Session Schedule</h2>
+    <textarea id="scheduleInput" rows="18" placeholder="Paste updated schedule here..."></textarea>
+    <button onclick="saveSchedule()">✅ Save Schedule</button>
+
+    <button class="back-btn" onclick="goHome()">⬅ Return to Main Page</button>
+  </div>
+
+  <div class="footer">Built for Hydra HQ – Version 1.0M</div>
+
+  <script>
+    function checkCode() {
+      const input = document.getElementById("adminCode").value;
+      if (input === "HBS123") {
+        document.getElementById("login-section").classList.add("hidden");
+        document.getElementById("admin-section").classList.remove("hidden");
+      } else {
+        alert("❌ Incorrect code");
+      }
+    }
+
+    function saveSchedule() {
+      const schedule = document.getElementById("scheduleInput").value;
+      localStorage.setItem("hydraWeeklySchedule", schedule);
+      alert("✅ Schedule saved. Return to main site to see update.");
+    }
+
+    function loadSchedule() {
+      const saved = localStorage.getItem("hydraWeeklySchedule");
+      if (saved) {
+        document.getElementById("scheduleInput").value = saved;
+      }
+    }
+
+    function goHome() {
+      window.location.href = "index.html"; // Adjust if your homepage file name is different
+    }
+  </script>
+
+</body>
+</html>

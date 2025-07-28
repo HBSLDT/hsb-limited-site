@@ -1,216 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Hydra HQ Admin</title>
-  <style>
-    body {
-      background: #000;
-      color: #eee;
-      font-family: 'Arial', sans-serif;
-      padding: 20px;
-    }
-    h1, h2 {
-      color: #fff;
-      text-align: center;
-    }
-    input, textarea {
-      display: block;
-      width: 90%;
-      max-width: 400px;
-      margin: 10px auto;
-      padding: 10px;
-      font-size: 16px;
-      background: #111;
-      color: #eee;
-      border: 1px solid #555;
-      border-radius: 6px;
-    }
-    button {
-      display: block;
-      margin: 10px auto;
-      padding: 12px 24px;
-      font-size: 16px;
-      background: #444;
-      color: #fff;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #666;
-    }
-    table {
-      width: 90%;
-      margin: 20px auto;
-      border-collapse: collapse;
-    }
-    th, td {
-      padding: 10px;
-      border: 1px solid #555;
-      text-align: center;
-    }
-    #contractList {
-      list-style: none;
-      padding: 0;
-      text-align: center;
-    }
-    #contractList li {
-      margin: 5px;
-    }
-    a {
-      color: #0f0;
-      text-decoration: none;
-    }
-    .dashboard {
-      display: none;
-    }
-    .return-link {
-      text-align: center;
-      margin-top: 40px;
-    }
-    .return-link a {
-      color: #25D366;
-      font-size: 18px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-    .return-link a:hover {
-      text-decoration: underline;
-    }
-  </style>
-</head>
-<body>
+<section id="schedule-editor" style="background:#111; color:#fff; padding: 30px; border-top: 1px solid #444;">
+  <h2 style="text-align:center;">🗓 Update Weekly Schedule</h2>
+  <p style="text-align:center; font-size:14px; color:#aaa;">Paste your new week schedule below and click update. It'll appear live on Hydra HQ.</p>
+  <textarea id="scheduleInput" placeholder="Paste your full weekly schedule here..." rows="18" style="width:100%; max-width:800px; margin:20px auto; display:block; padding:15px; font-size:15px; background:#000; color:#fff; border:1px solid #444; border-radius:5px;"></textarea>
+  <button onclick="updateSchedule()" style="margin: 0 auto; display:block; padding: 12px 20px; font-size: 16px; background: #25D366; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Update Weekly Schedule</button>
+</section>
 
-  <!-- LOGIN SCREEN -->
-  <div id="loginScreen">
-    <h1>Hydra HQ – Admin Login</h1>
-    <input id="adminCode" placeholder="Enter Admin Code" />
-    <button onclick="checkLogin()">🔐 Login</button>
-  </div>
+<script>
+  function updateSchedule() {
+    const newSchedule = document.getElementById("scheduleInput").value;
+    localStorage.setItem("hydraWeeklySchedule", newSchedule);
+    alert("✅ Weekly schedule updated successfully!");
+  }
 
-  <!-- ADMIN DASHBOARD -->
-  <div class="dashboard" id="adminDashboard">
-    <h1>Hydra HQ – Admin Dashboard</h1>
-
-    <!-- SELLER PERFORMANCE -->
-    <h2>📊 Seller Performance</h2>
-    <input id="sellerName" placeholder="Seller Name (e.g. Reece)">
-    <input id="salesCount" type="number" placeholder="Total Sales">
-    <input id="earnings" type="number" placeholder="Total Earnings (£)">
-    <input id="sellerCode" placeholder="Referral Code">
-    <button onclick="saveSeller()">💾 Save Seller</button>
-
-    <table id="sellerTable">
-      <thead>
-        <tr><th>Name</th><th>Sales</th><th>Earnings</th><th>Code</th></tr>
-      </thead>
-      <tbody></tbody>
-    </table>
-
-    <!-- SESSION AVAILABILITY -->
-    <h2>🗓️ Edit Weekly Sessions</h2>
-    <textarea id="sessionText" rows="5" placeholder="e.g. Mon: 7AM–10AM..."></textarea>
-    <button onclick="saveSessions()">💾 Save Sessions</button>
-    <p id="savedSessions" style="text-align:center;"></p>
-
-    <!-- CONTRACT UPLOAD -->
-    <h2>📎 Upload Contracts</h2>
-    <input type="file" id="contractUpload" />
-    <button onclick="uploadContract()">📤 Upload File</button>
-    <ul id="contractList"></ul>
-
-    <!-- RETURN BUTTON -->
-    <div class="return-link">
-      🔙 <a href="index.html">Return to Hydra HQ</a>
-    </div>
-  </div>
-
-  <script>
-    // LOGIN SYSTEM
-    function checkLogin() {
-      const input = document.getElementById("adminCode").value.trim();
-      if (input === "HBS123") {
-        document.getElementById("loginScreen").style.display = "none";
-        document.getElementById("adminDashboard").style.display = "block";
-        loadSellerTable();
-        renderSession();
-        renderContractList();
-      } else {
-        alert("Incorrect admin code.");
-      }
+  function loadSchedule() {
+    const scheduleSection = document.getElementById("weekly-schedule-content");
+    const saved = localStorage.getItem("hydraWeeklySchedule");
+    if (saved && scheduleSection) {
+      scheduleSection.innerText = saved;
     }
+  }
 
-    // SELLER STATS
-    function saveSeller() {
-      const name = document.getElementById("sellerName").value;
-      const sales = document.getElementById("salesCount").value;
-      const earnings = document.getElementById("earnings").value;
-      const code = document.getElementById("sellerCode").value;
-      if (!name) return alert("Enter a seller name.");
-
-      let sellers = JSON.parse(localStorage.getItem("sellers")) || [];
-      const existing = sellers.find(s => s.name === name);
-      if (existing) {
-        existing.sales = sales;
-        existing.earnings = earnings;
-        existing.code = code;
-      } else {
-        sellers.push({ name, sales, earnings, code });
-      }
-      localStorage.setItem("sellers", JSON.stringify(sellers));
-      loadSellerTable();
-    }
-
-    function loadSellerTable() {
-      const table = document.querySelector("#sellerTable tbody");
-      table.innerHTML = "";
-      const sellers = JSON.parse(localStorage.getItem("sellers")) || [];
-      sellers.forEach(s => {
-        const row = `<tr><td>${s.name}</td><td>${s.sales}</td><td>£${s.earnings}</td><td>${s.code}</td></tr>`;
-        table.innerHTML += row;
-      });
-    }
-
-    // SESSIONS
-    function saveSessions() {
-      const text = document.getElementById("sessionText").value;
-      localStorage.setItem("sessions", text);
-      document.getElementById("savedSessions").innerText = "✅ Availability Updated";
-    }
-
-    function renderSession() {
-      const saved = localStorage.getItem("sessions");
-      document.getElementById("sessionText").value = saved || "";
-    }
-
-    // CONTRACTS
-    let contracts = JSON.parse(localStorage.getItem("contracts")) || [];
-
-    function uploadContract() {
-      const fileInput = document.getElementById("contractUpload");
-      const file = fileInput.files[0];
-      if (!file) return alert("Select a file first.");
-
-      const reader = new FileReader();
-      reader.onload = function(e) {
-        contracts.push({ name: file.name, data: e.target.result });
-        localStorage.setItem("contracts", JSON.stringify(contracts));
-        renderContractList();
-        fileInput.value = '';
-      };
-      reader.readAsDataURL(file);
-    }
-
-    function renderContractList() {
-      const list = document.getElementById("contractList");
-      list.innerHTML = '';
-      contracts.forEach(file => {
-        const li = document.createElement("li");
-        li.innerHTML = `<a href="${file.data}" download="${file.name}">📎 ${file.name}</a>`;
-        list.appendChild(li);
-      });
-    }
-  </script>
-</body>
-</html>
+  window.onload = loadSchedule;
+</script>

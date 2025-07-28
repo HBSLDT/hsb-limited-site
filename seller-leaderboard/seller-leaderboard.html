@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sales Up | Seller Leaderboard</title>
+  <style>
+    body {
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 2em;
+      color: gold;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #111;
+      border: 1px solid #444;
+    }
+    th, td {
+      padding: 12px;
+      text-align: center;
+      border: 1px solid #333;
+    }
+    th {
+      background-color: #222;
+      color: #0ff;
+    }
+    td input {
+      width: 90%;
+      padding: 5px;
+      background: #000;
+      color: #fff;
+      border: 1px solid #555;
+    }
+    #saveBtn {
+      margin-top: 20px;
+      background: gold;
+      color: #000;
+      font-weight: bold;
+      padding: 10px 20px;
+      border: none;
+      cursor: pointer;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🏆 Seller Leaderboard</h1>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Seller Name</th>
+        <th>Seller Code</th>
+        <th>Total Sales</th>
+        <th>Total Earnings (£)</th>
+      </tr>
+    </thead>
+    <tbody id="sellerTable">
+      <tr>
+        <td><input value="Reece"></td>
+        <td><input value="RC123"></td>
+        <td><input value="12"></td>
+        <td><input value="£72"></td>
+      </tr>
+      <tr>
+        <td><input value="Dylan"></td>
+        <td><input value="DY555"></td>
+        <td><input value="4"></td>
+        <td><input value="£24"></td>
+      </tr>
+      <!-- Add more rows as needed -->
+    </tbody>
+  </table>
+
+  <button id="saveBtn">💾 Save Changes</button>
+
+  <script>
+    document.getElementById('saveBtn').addEventListener('click', function() {
+      alert('Leaderboard saved successfully. (Manual HTML edit still required)');
+    });
+  </script>
+
+</body>
+</html>

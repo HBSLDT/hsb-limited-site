@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydra HQ Admin – HBS Ltd</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background: #000;
+      color: #fff;
+      padding: 20px;
+    }
+    h1, h2 {
+      text-align: center;
+      color: #fff;
+    }
+    .login-box {
+      text-align: center;
+      margin-top: 100px;
+    }
+    input[type="password"], textarea, input[type="file"] {
+      padding: 10px;
+      font-size: 16px;
+      width: 90%;
+      max-width: 400px;
+      margin: 10px auto;
+      display: block;
+      border-radius: 8px;
+    }
+    .admin-button {
+      padding: 12px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      background-color: #25D366;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      color: black;
+      font-weight: bold;
+    }
+    .admin-panel {
+      display: none;
+      margin-top: 30px;
+    }
+    .admin-section {
+      background: #111;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 12px;
+    }
+    .admin-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+    .admin-table th, .admin-table td {
+      border: 1px solid #333;
+      padding: 10px;
+      text-align: center;
+    }
+    .admin-table th {
+      background-color: #222;
+    }
+    .note {
+      font-size: 13px;
+      color: #999;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Hydra HQ Admin Panel</h1>
+
+  <!-- LOGIN BOX -->
+  <div class="login-box" id="loginBox">
+    <p>Enter Admin Code:</p>
+    <input type="password" id="adminCode" placeholder="Enter code..." />
+    <button class="admin-button" onclick="checkCode()">Unlock Admin</button>
+    <p class="note">Hint: Use HBS123 (all caps)</p>
+  </div>
+
+  <!-- MAIN ADMIN PANEL -->
+  <div class="admin-panel" id="adminPanel">
+
+    <!-- SELLER STATS -->
+    <section class="admin-section">
+      <h2>💰 Seller Stats</h2>
+      <table class="admin-table">
+        <thead>
+          <tr><th>Seller</th><th>Code</th><th>Sales</th><th>Earnings (£)</th><th>Last Sale</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Reece</td><td>RC2025</td><td>24</td><td>144</td><td>2025-07-27</td></tr>
+          <tr><td>Harley</td><td>HL2025</td><td>18</td><td>108</td><td>2025-07-26</td></tr>
+          <tr><td>Dylan</td><td>DY2025</td><td>12</td><td>72</td><td>2025-07-25</td></tr>
+          <tr><td>Jaz</td><td>JZ2025</td><td>9</td><td>54</td><td>2025-07-24</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- FILE UPLOAD -->
+    <section class="admin-section">
+      <h2>📎 Upload Contracts / Files</h2>
+      <form action="#" method="post" enctype="multipart/form-data">
+        <input type="file" name="file" />
+        <button class="admin-button" type="submit">Upload File</button>
+        <p class="note">* Upload feature requires Netlify Forms or backend support.</p>
+      </form>
+    </section>
+
+    <!-- BOOKING LOG -->
+    <section class="admin-section">
+      <h2>📅 Booking Log (Coming Soon)</h2>
+      <p>This section will show recent session bookings through Hydra AI or Calendly.</p>
+    </section>
+
+    <!-- OVERRIDE SESSION TIMES -->
+    <section class="admin-section">
+      <h2>🔧 Override Weekly Session Times</h2>
+      <form>
+        <textarea rows="4" cols="50" placeholder="E.g. Monday: 7AM–9AM, 3PM–5PM..."></textarea>
+        <button class="admin-button" type="button" onclick="alert('Saved! (Fake override for now)')">Save New Weekly Times</button>
+      </form>
+    </section>
+
+  </div>
+
+  <!-- JS LOGIN LOGIC -->
+  <script>
+    function checkCode() {
+      const input = document.getElementById("adminCode").value;
+      if (input === "HBS123") {
+        document.getElementById("loginBox").style.display = "none";
+        document.getElementById("adminPanel").style.display = "block";
+        alert("Access Granted – Welcome to Hydra HQ Admin");
+      } else {
+        alert("Incorrect code. Try again.");
+      }
+    }
+  </script>
+
+</body>
+</html>

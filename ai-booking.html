@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydra AI Booking Assistant</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #000;
+      color: #0f0;
+      padding: 20px;
+    }
+    .chat {
+      max-width: 600px;
+      margin: auto;
+      background: #111;
+      padding: 20px;
+      border-radius: 10px;
+    }
+    .ai, .user {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 6px;
+    }
+    .ai {
+      background: #222;
+      color: #0f0;
+    }
+    .user {
+      background: #333;
+      color: #0ff;
+      text-align: right;
+    }
+    input, button {
+      margin-top: 10px;
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 6px;
+      border: none;
+    }
+    button {
+      background: #00ffff;
+      color: #000;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    #output {
+      margin-top: 20px;
+      font-family: monospace;
+      background: #111;
+      padding: 10px;
+      border-radius: 6px;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="chat">
+    <div class="ai">🤖 Hi there! Want to book a session with Gloves Up? Just type "yes" to begin.</div>
+    <div id="chatArea"></div>
+    <input type="text" id="userInput" placeholder="Type your reply..." />
+    <button onclick="chat()">Send</button>
+    <div id="output"></div>
+  </div>
+
+  <script>
+    const chatArea = document.getElementById('chatArea');
+    const input = document.getElementById('userInput');
+    const output = document.getElementById('output');
+
+    let step = 0;
+    let userName = '';
+    let sessionTime = '';
+
+    function addMessage(text, sender) {
+      const div = document.createElement('div');
+      div.className = sender;
+      div.textContent = text;
+      chatArea.appendChild(div);
+    }
+
+    function chat() {
+      const userText = input.value.trim();
+      if (!userText) return;
+
+      addMessage(userText, 'user');
+      input.value = '';
+
+      if (step === 0 && userText.toLowerCase() === 'yes') {
+        step = 1;
+        setTimeout(() => addMessage('Great! What’s your first name?', 'ai'), 500);
+      } else if (step === 1) {
+        userName = userText;
+        step = 2;
+        setTimeout(() => addMessage(`Nice to meet you, ${userName}! What time do you want to book?`, 'ai'), 500);
+      } else if (step === 2) {
+        sessionTime = userText;
+        const message = `Hi it’s ${userName}. I’d like to book a Gloves Up session at ${sessionTime}. Is that still available? 💥`;
+        addMessage('Got it! Copy this message and send it via WhatsApp:', 'ai');
+        output.textContent = message;
+        step = 3;
+      } else {
+        addMessage('Type "yes" to restart the booking process.', 'ai');
+        step = 0;
+      }
+    }
+  </script>
+
+</body>
+</html>

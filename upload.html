@@ -3,95 +3,84 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hydra File Upload</title>
+  <title>Upload Contract | Hydra HQ</title>
   <style>
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #000;
-      color: #fff;
-      padding: 20px;
-    }
-    header {
-      text-align: center;
-      font-size: 28px;
-      font-weight: bold;
-      padding: 20px;
-      background: linear-gradient(to right, #111, #222);
-    }
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background-color: #111;
+      background: #0d0d0d;
+      color: #eee;
+      font-family: Arial, sans-serif;
       padding: 30px;
-      border-radius: 10px;
-      border: 1px solid #333;
+      text-align: center;
     }
-    input[type="text"], input[type="file"] {
-      width: 100%;
-      padding: 10px;
-      margin: 12px 0;
-      background-color: #222;
-      border: 1px solid #444;
-      color: #fff;
-      border-radius: 6px;
+    h1 {
+      font-size: 28px;
+      margin-bottom: 20px;
+    }
+    input[type="file"] {
+      margin: 20px 0;
     }
     button {
-      padding: 12px 24px;
-      background-color: #444;
+      background: #444;
+      color: #fff;
+      padding: 10px 20px;
       border: none;
-      color: white;
-      font-weight: bold;
-      border-radius: 6px;
+      border-radius: 8px;
+      font-size: 16px;
       cursor: pointer;
     }
     button:hover {
-      background-color: #666;
+      background: #666;
     }
-    .success {
-      margin-top: 15px;
-      color: #0f0;
-      font-weight: bold;
-    }
-    .back {
-      display: inline-block;
-      margin-top: 20px;
-      text-decoration: none;
+    a {
       color: #aaa;
-      font-size: 14px;
+      text-decoration: none;
+      display: block;
+      margin-top: 30px;
+    }
+    #status {
+      margin-top: 20px;
+      color: #0f0;
     }
   </style>
 </head>
 <body>
 
-  <header>📤 Upload a File to Hydra</header>
+  <h1>📤 Upload Contract</h1>
+  <p>Please upload your signed contract below. Accepted: JPG, PNG, PDF, DOCX</p>
 
-  <div class="container">
-    <form id="uploadForm">
-      <label for="filename">Client Name or Description:</label>
-      <input type="text" id="filename" name="filename" required>
+  <input type="file" id="contractFile" accept=".jpg,.jpeg,.png,.pdf,.docx" />
+  <br>
+  <button onclick="submitContract()">Submit</button>
 
-      <label for="file">Choose File (PDF, JPG, DOC, etc):</label>
-      <input type="file" id="file" name="file" required>
+  <div id="status"></div>
 
-      <button type="submit">Upload File</button>
-      <div id="message" class="success"></div>
-    </form>
-
-    <a href="dashboard.html" class="back">← Return to Control Panel</a>
-  </div>
+  <a href="index.html">⬅️ Back to Hydra HQ</a>
 
   <script>
-    document.getElementById('uploadForm').addEventListener('submit', function(event) {
-      event.preventDefault();
-      const fileInput = document.getElementById('file');
-      const nameInput = document.getElementById('filename');
-      if (fileInput.files.length > 0 && nameInput.value.trim() !== '') {
-        document.getElementById('message').innerText = `✅ "${fileInput.files[0].name}" uploaded successfully for ${nameInput.value}`;
-      } else {
-        document.getElementById('message').innerText = `❌ Upload failed. Please enter details and select a file.`;
+    function submitContract() {
+      const fileInput = document.getElementById('contractFile');
+      const file = fileInput.files[0];
+      const status = document.getElementById('status');
+
+      if (!file) {
+        status.innerText = "Please select a file first.";
+        return;
       }
-    });
+
+      const reader = new FileReader();
+      reader.onload = function () {
+        const savedFiles = JSON.parse(localStorage.getItem("uploadedContracts") || "[]");
+        savedFiles.push({
+          name: file.name,
+          dataUrl: reader.result,
+          timestamp: new Date().toLocaleString()
+        });
+        localStorage.setItem("uploadedContracts", JSON.stringify(savedFiles));
+        status.innerText = "✅ Contract uploaded successfully.";
+        fileInput.value = "";
+      };
+      reader.readAsDataURL(file);
+    }
   </script>
 
 </body>

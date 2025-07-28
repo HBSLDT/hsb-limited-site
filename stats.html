@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydra HQ Stats & Contracts</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #000;
+      color: #eee;
+      padding: 20px;
+    }
+    header {
+      background: linear-gradient(90deg, #555, #111);
+      padding: 20px;
+      font-size: 26px;
+      font-weight: bold;
+      text-align: center;
+    }
+    section {
+      margin-bottom: 40px;
+    }
+    h2 {
+      margin-top: 30px;
+      border-bottom: 2px solid #444;
+      padding-bottom: 8px;
+    }
+    pre {
+      white-space: pre-wrap;
+      background-color: #111;
+      padding: 15px;
+      border-radius: 6px;
+      border: 1px solid #333;
+    }
+    textarea {
+      width: 100%;
+      height: 150px;
+      padding: 10px;
+      background: #111;
+      color: #eee;
+      border: 1px solid #444;
+      border-radius: 6px;
+    }
+    button {
+      margin-top: 10px;
+      background: #444;
+      border: none;
+      padding: 10px 20px;
+      color: #eee;
+      cursor: pointer;
+      border-radius: 6px;
+    }
+    .nav {
+      margin-top: 20px;
+    }
+    .nav a {
+      margin-right: 15px;
+      text-decoration: none;
+      color: #0af;
+    }
+  </style>
+</head>
+<body>
+
+  <header>📊 Hydra HQ – Stats & Contract Tracker</header>
+
+  <section>
+    <h2>💼 Seller Performance Overview</h2>
+    <pre id="statDisplay">Loading stats...</pre>
+    <textarea id="statInput" placeholder="Update seller stats here..."></textarea>
+    <button onclick="saveStats()">Save Stats</button>
+  </section>
+
+  <section>
+    <h2>📁 Uploaded Contracts</h2>
+    <pre id="contractList">Loading uploaded files...</pre>
+  </section>
+
+  <div class="nav">
+    <a href="admin.html">↩ Return to Admin</a>
+    <a href="index.html">🏠 Go to Homepage</a>
+  </div>
+
+  <script>
+    // Load saved stats
+    const stats = localStorage.getItem('sellerStats');
+    document.getElementById('statDisplay').textContent = stats || 'No seller stats available.';
+    document.getElementById('statInput').value = stats || '';
+
+    function saveStats() {
+      const updatedStats = document.getElementById('statInput').value;
+      localStorage.setItem('sellerStats', updatedStats);
+      document.getElementById('statDisplay').textContent = updatedStats;
+      alert("Stats saved!");
+    }
+
+    // Dummy list of uploaded contracts
+    const files = JSON.parse(localStorage.getItem('uploadedContracts') || '[]');
+    const contractOutput = files.length
+      ? files.map((f, i) => `${i + 1}. ${f}`).join('\n')
+      : 'No contracts uploaded yet.';
+    document.getElementById('contractList').textContent = contractOutput;
+  </script>
+
+</body>
+</html>

@@ -1,77 +1,86 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hydra Admin Login</title>
+  <meta charset="UTF-8">
+  <title>Hydra HQ Admin</title>
   <style>
     body {
-      font-family: 'Arial', sans-serif;
       background: #000;
-      color: white;
-      margin: 0;
+      color: #eee;
+      font-family: 'Arial', sans-serif;
       padding: 20px;
     }
-    h1 {
+    h1, h2 {
+      color: #fff;
       text-align: center;
-      font-size: 28px;
     }
-    .login-section, .dashboard {
-      max-width: 600px;
-      margin: 40px auto;
-      background: #111;
-      padding: 30px;
-      border-radius: 12px;
-    }
-    input {
-      width: 100%;
-      padding: 15px;
-      margin-bottom: 20px;
+    input, textarea {
+      display: block;
+      width: 90%;
+      max-width: 400px;
+      margin: 10px auto;
+      padding: 10px;
       font-size: 16px;
+      background: #111;
+      color: #eee;
+      border: 1px solid #555;
       border-radius: 6px;
-      border: none;
     }
     button {
-      background: #FFD700;
-      color: black;
-      font-weight: bold;
-      padding: 12px 20px;
+      display: block;
+      margin: 10px auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background: #444;
+      color: #fff;
       border: none;
-      border-radius: 8px;
+      border-radius: 6px;
       cursor: pointer;
     }
     button:hover {
-      background: #e6c200;
+      background: #666;
     }
     table {
-      width: 100%;
-      margin-top: 20px;
+      width: 90%;
+      margin: 20px auto;
       border-collapse: collapse;
     }
     th, td {
-      border: 1px solid #333;
       padding: 10px;
+      border: 1px solid #555;
       text-align: center;
     }
-    th {
-      background-color: #222;
+    #contractList {
+      list-style: none;
+      padding: 0;
+      text-align: center;
+    }
+    #contractList li {
+      margin: 5px;
+    }
+    a {
+      color: #0f0;
+      text-decoration: none;
+    }
+    .dashboard {
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <!-- Login Section -->
-  <div class="login-section" id="loginSection">
-    <h1>Admin Login</h1>
-    <input type="password" id="adminCode" placeholder="Enter admin code..." />
-    <button onclick="checkLogin()">Unlock</button>
-    <p id="loginError" style="color:red;"></p>
+  <!-- LOGIN SCREEN -->
+  <div id="loginScreen">
+    <h1>Hydra HQ – Admin Login</h1>
+    <input id="adminCode" placeholder="Enter Admin Code" />
+    <button onclick="checkLogin()">🔐 Login</button>
   </div>
 
-  <!-- Dashboard Section -->
-  <div class="dashboard" id="adminDashboard" style="display:none;">
+  <!-- ADMIN DASHBOARD -->
+  <div class="dashboard" id="adminDashboard">
     <h1>Hydra HQ – Admin Dashboard</h1>
 
+    <!-- SELLER PERFORMANCE -->
     <h2>📊 Seller Performance</h2>
     <input id="sellerName" placeholder="Seller Name (e.g. Reece)">
     <input id="salesCount" type="number" placeholder="Total Sales">
@@ -86,64 +95,104 @@
       <tbody></tbody>
     </table>
 
-    <h2 style="margin-top:40px;">🗓️ Edit Weekly Sessions</h2>
+    <!-- SESSION AVAILABILITY -->
+    <h2>🗓️ Edit Weekly Sessions</h2>
     <textarea id="sessionText" rows="5" placeholder="e.g. Mon: 7AM–10AM..."></textarea>
-    <button onclick="saveSessions()">Save Sessions</button>
-    <p id="savedSessions" style="margin-top:10px;"></p>
+    <button onclick="saveSessions()">💾 Save Sessions</button>
+    <p id="savedSessions" style="text-align:center;"></p>
+
+    <!-- CONTRACT UPLOAD -->
+    <h2>📎 Upload Contracts</h2>
+    <input type="file" id="contractUpload" />
+    <button onclick="uploadContract()">📤 Upload File</button>
+    <ul id="contractList"></ul>
   </div>
 
   <script>
-    const correctCode = "HBS123";
-
+    // LOGIN SYSTEM
     function checkLogin() {
-      const entered = document.getElementById("adminCode").value;
-      if (entered === correctCode) {
-        document.getElementById("loginSection").style.display = "none";
+      const input = document.getElementById("adminCode").value.trim();
+      if (input === "HBS123") {
+        document.getElementById("loginScreen").style.display = "none";
         document.getElementById("adminDashboard").style.display = "block";
-        renderSellerTable();
-        const savedSessions = localStorage.getItem("sessions");
-        if (savedSessions) {
-          document.getElementById("sessionText").value = savedSessions;
-          document.getElementById("savedSessions").innerText = "✅ " + savedSessions;
-        }
+        loadSellerTable();
+        renderSession();
+        renderContractList();
       } else {
-        document.getElementById("loginError").innerText = "❌ Incorrect code.";
+        alert("Incorrect admin code.");
       }
     }
 
-    let sellers = JSON.parse(localStorage.getItem("sellers")) || [];
-
+    // SELLER STATS
     function saveSeller() {
-      const name = document.getElementById('sellerName').value.trim();
-      const sales = document.getElementById('salesCount').value.trim();
-      const earnings = document.getElementById('earnings').value.trim();
-      const code = document.getElementById('sellerCode').value.trim();
+      const name = document.getElementById("sellerName").value;
+      const sales = document.getElementById("salesCount").value;
+      const earnings = document.getElementById("earnings").value;
+      const code = document.getElementById("sellerCode").value;
+      if (!name) return alert("Enter a seller name.");
 
-      if (!name || !sales || !earnings || !code) return alert("Please fill in all seller fields!");
-
-      sellers.push({ name, sales, earnings, code });
+      let sellers = JSON.parse(localStorage.getItem("sellers")) || [];
+      const existing = sellers.find(s => s.name === name);
+      if (existing) {
+        existing.sales = sales;
+        existing.earnings = earnings;
+        existing.code = code;
+      } else {
+        sellers.push({ name, sales, earnings, code });
+      }
       localStorage.setItem("sellers", JSON.stringify(sellers));
-      renderSellerTable();
-      document.getElementById('sellerName').value = '';
-      document.getElementById('salesCount').value = '';
-      document.getElementById('earnings').value = '';
-      document.getElementById('sellerCode').value = '';
+      loadSellerTable();
     }
 
-    function renderSellerTable() {
-      const tableBody = document.querySelector("#sellerTable tbody");
-      tableBody.innerHTML = "";
+    function loadSellerTable() {
+      const table = document.querySelector("#sellerTable tbody");
+      table.innerHTML = "";
+      const sellers = JSON.parse(localStorage.getItem("sellers")) || [];
       sellers.forEach(s => {
-        tableBody.innerHTML += `<tr><td>${s.name}</td><td>${s.sales}</td><td>£${s.earnings}</td><td>${s.code}</td></tr>`;
+        const row = `<tr><td>${s.name}</td><td>${s.sales}</td><td>£${s.earnings}</td><td>${s.code}</td></tr>`;
+        table.innerHTML += row;
       });
     }
 
+    // SESSIONS
     function saveSessions() {
       const text = document.getElementById("sessionText").value;
       localStorage.setItem("sessions", text);
-      document.getElementById("savedSessions").innerText = "✅ " + text;
+      document.getElementById("savedSessions").innerText = "✅ Availability Updated";
+    }
+
+    function renderSession() {
+      const saved = localStorage.getItem("sessions");
+      document.getElementById("sessionText").value = saved || "";
+    }
+
+    // CONTRACTS
+    let contracts = JSON.parse(localStorage.getItem("contracts")) || [];
+
+    function uploadContract() {
+      const fileInput = document.getElementById("contractUpload");
+      const file = fileInput.files[0];
+      if (!file) return alert("Select a file first.");
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        contracts.push({ name: file.name, data: e.target.result });
+        localStorage.setItem("contracts", JSON.stringify(contracts));
+        renderContractList();
+        fileInput.value = '';
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function renderContractList() {
+      const list = document.getElementById("contractList");
+      list.innerHTML = '';
+      contracts.forEach(file => {
+        const li = document.createElement("li");
+        li.innerHTML = `<a href="${file.data}" download="${file.name}">📎 ${file.name}</a>`;
+        list.appendChild(li);
+      });
     }
   </script>
-
 </body>
 </html>

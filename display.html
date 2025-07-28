@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydra HQ Display</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background: #000;
+      color: #eee;
+      padding: 20px;
+    }
+    h1, h2 {
+      color: #00ffff;
+    }
+    .section {
+      background: #111;
+      border: 1px solid #333;
+      padding: 20px;
+      border-radius: 10px;
+      margin-bottom: 40px;
+    }
+    .schedule, .leaderboard {
+      white-space: pre-wrap;
+      font-family: monospace;
+      font-size: 15px;
+      color: #fff;
+    }
+    .refresh {
+      background: #00ffff;
+      color: #000;
+      font-weight: bold;
+      border: none;
+      padding: 10px 20px;
+      margin-bottom: 30px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>📅 Weekly Booking Schedule</h1>
+  <button class="refresh" onclick="loadData()">🔄 Refresh</button>
+
+  <div class="section">
+    <h2>🥊 Session Availability</h2>
+    <div id="scheduleDisplay" class="schedule">Loading schedule...</div>
+  </div>
+
+  <div class="section">
+    <h2>📈 Seller Performance Leaderboard</h2>
+    <div id="sellerDisplay" class="leaderboard">Loading sellers...</div>
+  </div>
+
+  <script>
+    function loadData() {
+      const schedule = localStorage.getItem("hydraSchedule") || "No schedule set.";
+      document.getElementById("scheduleDisplay").textContent = schedule;
+
+      let sellers = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        let key = localStorage.key(i);
+        if (key.startsWith("seller_")) {
+          let data = JSON.parse(localStorage.getItem(key));
+          sellers.push(data);
+        }
+      }
+
+      sellers.sort((a, b) => b.sales - a.sales);
+
+      let display = "";
+      sellers.forEach(s => {
+        display += `${s.name} (${s.code}) - Sales: ${s.sales} | Earnings: ${s.earnings}\n`;
+      });
+
+      document.getElementById("sellerDisplay").textContent = display || "No seller data yet.";
+    }
+
+    loadData();
+  </script>
+
+</body>
+</html>

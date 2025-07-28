@@ -2,152 +2,95 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hydra Admin Panel</title>
+  <title>Hydra HQ Admin Panel</title>
   <style>
     body {
-      margin: 0;
-      font-family: 'Arial', sans-serif;
-      background: #0a0a0a;
-      color: #eee;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
-    }
-    h1 {
-      color: #00ffff;
-      margin-bottom: 10px;
-    }
-    .login-box, .admin-panel {
-      background: #111;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,255,255,0.2);
-      max-width: 400px;
-      width: 100%;
+      background: #000;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      padding: 20px;
       text-align: center;
     }
+    #admin-content { display: none; }
     input, select, button {
-      width: 100%;
       padding: 10px;
-      margin: 10px 0;
-      font-size: 1rem;
-      border: none;
+      margin: 8px;
       border-radius: 5px;
+      border: none;
+      font-size: 16px;
     }
-    input[type="text"], input[type="time"], select {
-      background: #222;
-      color: #eee;
-    }
-    button {
-      background: #00ffff;
-      color: #000;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .hidden {
-      display: none;
-    }
-    .success-message {
-      color: #0f0;
-      margin-top: 20px;
-    }
-    .return-link {
-      display: inline-block;
-      margin-top: 20px;
-      color: #00ffff;
-      text-decoration: underline;
-    }
-    ul {
-      padding-left: 0;
-      list-style-type: none;
-      text-align: left;
-    }
-    li {
-      padding: 5px 0;
-      border-bottom: 1px solid #333;
-    }
+    button { background: #00ffff; color: #000; cursor: pointer; }
+    ul { list-style: none; padding: 0; }
+    li { margin: 5px 0; color: #0f0; }
+    a { color: #00ffff; font-weight: bold; }
   </style>
 </head>
 <body>
 
-  <h1>Hydra Admin Panel</h1>
+  <h1>🧠 Hydra Admin Access</h1>
+  <input type="password" id="codeInput" placeholder="Enter admin code..." />
+  <button onclick="checkCode()">Unlock</button>
 
-  <div class="login-box" id="login-box">
-    <p>Enter code to unlock admin access:</p>
-    <input type="password" id="adminCode" placeholder="Enter code..." />
-    <button onclick="checkCode()">Login</button>
-    <p id="loginMessage" class="success-message hidden">✅ Access granted. You may now edit session availability.</p>
-  </div>
-
-  <div class="admin-panel hidden" id="adminPanel">
-    <h2>Edit Session Availability</h2>
-    <form id="availabilityForm">
-      <select id="day" required>
-        <option value="" disabled selected>Select a day</option>
-        <option value="Monday">Monday</option>
-        <option value="Tuesday">Tuesday</option>
-        <option value="Wednesday">Wednesday</option>
-        <option value="Thursday">Thursday</option>
-        <option value="Friday">Friday</option>
-        <option value="Saturday">Saturday</option>
-      </select>
-      <input type="time" id="start" required placeholder="Start Time" />
-      <input type="time" id="end" required placeholder="End Time" />
-      <button type="submit">Save Availability</button>
+  <div id="admin-content">
+    <h2>✅ Access Granted</h2>
+    <form id="availability-form">
+      <select id="day">
+        <option>Monday</option><option>Tuesday</option><option>Wednesday</option>
+        <option>Thursday</option><option>Friday</option><option>Saturday</option>
+      </select><br>
+      <input type="time" id="start" /> to <input type="time" id="end" /><br>
+      <button type="submit">Save Slot</button>
     </form>
-    <div class="success-message hidden" id="formSaved">✅ Availability saved!</div>
-    <ul id="availabilityList"></ul>
-    <a class="return-link" href="index.html">← Return to Homepage</a>
+
+    <h3>📅 Current Slots:</h3>
+    <ul id="availability-list"></ul>
+
+    <p id="doneMsg" style="display:none;">
+      ✅ Saved! <a href="index.html">← Return to homepage</a>
+    </p>
   </div>
 
   <script>
-    const CODE = "HBS123";
-    const loginBox = document.getElementById("login-box");
-    const adminPanel = document.getElementById("adminPanel");
-    const loginMessage = document.getElementById("loginMessage");
-    const availabilityForm = document.getElementById("availabilityForm");
-    const formSaved = document.getElementById("formSaved");
-    const availabilityList = document.getElementById("availabilityList");
+    const unlockCode = "HBS123";
+    const codeInput = document.getElementById("codeInput");
+    const adminContent = document.getElementById("admin-content");
+    const form = document.getElementById("availability-form");
+    const list = document.getElementById("availability-list");
+    const doneMsg = document.getElementById("doneMsg");
 
     function checkCode() {
-      const inputCode = document.getElementById("adminCode").value;
-      if (inputCode === CODE) {
-        loginBox.classList.add("hidden");
-        adminPanel.classList.remove("hidden");
-        loginMessage.classList.remove("hidden");
+      if (codeInput.value === unlockCode) {
+        adminContent.style.display = "block";
       } else {
-        alert("❌ Incorrect code. Try again.");
+        alert("❌ Wrong code.");
       }
     }
 
-    const savedSlots = [];
+    function updateDisplay() {
+      list.innerHTML = "";
+      const slots = JSON.parse(localStorage.getItem("availability")) || [];
+      slots.forEach(slot => {
+        const li = document.createElement("li");
+        li.textContent = slot;
+        list.appendChild(li);
+      });
+    }
 
-    availabilityForm.addEventListener("submit", function (e) {
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
       const day = document.getElementById("day").value;
       const start = document.getElementById("start").value;
       const end = document.getElementById("end").value;
-
-      if (day && start && end) {
-        const slot = `${day}: ${start}–${end}`;
-        savedSlots.push(slot);
-        updateAvailabilityList();
-        availabilityForm.reset();
-        formSaved.classList.remove("hidden");
-      }
+      const slot = `${day}: ${start} – ${end}`;
+      const slots = JSON.parse(localStorage.getItem("availability")) || [];
+      slots.push(slot);
+      localStorage.setItem("availability", JSON.stringify(slots));
+      updateDisplay();
+      doneMsg.style.display = "block";
+      form.reset();
     });
 
-    function updateAvailabilityList() {
-      availabilityList.innerHTML = "";
-      savedSlots.forEach(slot => {
-        const li = document.createElement("li");
-        li.textContent = slot;
-        availabilityList.appendChild(li);
-      });
-    }
+    updateDisplay();
   </script>
-
 </body>
 </html>

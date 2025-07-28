@@ -1,24 +1,44 @@
-<section id="schedule-editor" style="background:#111; color:#fff; padding: 30px; border-top: 1px solid #444;">
-  <h2 style="text-align:center;">🗓 Update Weekly Schedule</h2>
-  <p style="text-align:center; font-size:14px; color:#aaa;">Paste your new week schedule below and click update. It'll appear live on Hydra HQ.</p>
-  <textarea id="scheduleInput" placeholder="Paste your full weekly schedule here..." rows="18" style="width:100%; max-width:800px; margin:20px auto; display:block; padding:15px; font-size:15px; background:#000; color:#fff; border:1px solid #444; border-radius:5px;"></textarea>
-  <button onclick="updateSchedule()" style="margin: 0 auto; display:block; padding: 12px 20px; font-size: 16px; background: #25D366; color: white; border: none; border-radius: 6px; cursor: pointer;">✅ Update Weekly Schedule</button>
-</section>
-
-<script>
-  function updateSchedule() {
-    const newSchedule = document.getElementById("scheduleInput").value;
-    localStorage.setItem("hydraWeeklySchedule", newSchedule);
-    alert("✅ Weekly schedule updated successfully!");
-  }
-
-  function loadSchedule() {
-    const scheduleSection = document.getElementById("weekly-schedule-content");
-    const saved = localStorage.getItem("hydraWeeklySchedule");
-    if (saved && scheduleSection) {
-      scheduleSection.innerText = saved;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydra HQ – Powered by HBS Ltd</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #000;
+      color: white;
     }
-  }
-
-  window.onload = loadSchedule;
-</script>
+    header {
+      background: #111;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .logo {
+      display: block;
+      margin: 20px auto;
+      width: 150px;
+    }
+    .section {
+      text-align: center;
+      margin: 30px 20px;
+    }
+    .button {
+      display: block;
+      margin: 15px auto;
+      padding: 15px 30px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      max-width: 300px;
+      color: white;
+    }
+    .glovesup { background: #E5E4E2; color: black; }
+    .salesup { background: #FFD700; color: black; }
+    .noexcuse { background: #B76E79; }
+    .

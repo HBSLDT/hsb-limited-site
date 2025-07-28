@@ -3,78 +3,98 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hydra HQ – AI Assistant</title>
+  <title>Hydra HQ – Powered by HBS Ltd</title>
   <style>
     body {
       margin: 0;
       font-family: 'Arial', sans-serif;
       background: #000;
-      color: #eee;
+      color: white;
       text-align: center;
     }
-
-    .logo {
-      width: 180px;
-      margin: 40px auto 10px;
-      display: block;
-    }
-
     header {
+      padding: 20px;
       font-size: 28px;
       font-weight: bold;
-      color: #FFD700;
-      margin-bottom: 10px;
+      background: #111;
+      line-height: 1.5;
     }
-
-    .tagline {
-      font-size: 14px;
-      color: #888;
-      margin-bottom: 40px;
+    .logo {
+      width: 220px;
+      max-width: 90%;
+      margin: 30px auto 15px;
+      display: block;
+      border-radius: 10px;
     }
-
+    .section {
+      margin: 30px auto;
+    }
     .button {
       display: block;
-      margin: 20px auto;
+      margin: 15px auto;
       padding: 15px 30px;
       border: none;
-      border-radius: 10px;
+      border-radius: 8px;
       font-size: 18px;
-      font-weight: bold;
       cursor: pointer;
       width: 80%;
-      max-width: 320px;
-      background: #FFD700;
-      color: black;
-      transition: 0.3s;
+      max-width: 300px;
+      color: white;
+      transition: background 0.3s;
     }
-
-    .button:hover {
+    .glovesup {
+      background: #E5E4E2; /* platinum */
+      color: black;
+    }
+    .glovesup:hover {
+      background: #ccc;
+    }
+    .salesup {
+      background: #FFD700; /* gold */
+      color: black;
+    }
+    .salesup:hover {
       background: #e6c200;
     }
-
-    footer {
-      font-size: 13px;
-      color: #555;
-      margin-top: 60px;
-      padding-bottom: 40px;
+    .noexcuse {
+      background: #B76E79; /* rose gold */
+    }
+    .noexcuse:hover {
+      background: #a0555f;
+    }
+    .footer {
+      font-size: 14px;
+      margin-top: 40px;
+      color: #888;
+      padding-bottom: 30px;
+    }
+    .footer a {
+      color: #25D366;
+      text-decoration: none;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-  <!-- LOGO: Make sure this file exists in the same folder -->
-  <img src="6EE78258-0F40-4F4A-A2C6-67FF419C38E0.jpeg" alt="Hydra Logo" class="logo" />
+  <!-- LOGO -->
+  <img src="https://raw.githubusercontent.com/HBSLDT/hsb-limited-site/main/FDBABE94-FC11-4407-A41C-6309920F8307.png" alt="Hydra HQ Logo" class="logo" />
 
-  <header>Welcome to Hydra HQ</header>
-  <div class="tagline">The Command Centre of HBS Limited</div>
+  <!-- HEADER -->
+  <header>Welcome to Hydra HQ<br>Powered by HBS Ltd</header>
 
-  <button class="button" onclick="location.href='ai.html'">💬 Talk to Hydra AI</button>
-  <button class="button" onclick="location.href='admin.html'">🔐 Admin Login</button>
+  <!-- BUTTON SECTION -->
+  <div class="section">
+    <button class="button glovesup" onclick="location.href='https://noexcusefit.gumroad.com/l/lauiq'">🥊 Gloves Up Boxing</button>
+    <button class="button salesup" onclick="location.href='https://noexcusefit.gumroad.com/l/wownvr'">💰 Sales Up</button>
+    <button class="button noexcuse" onclick="location.href='https://noexcusefit.gumroad.com/l/hwtuj'">🔥 No Excuse Fitness</button>
+  </div>
 
-  <footer>
-    Hydra HQ System © 2025<br>
-    Developed by HBS Ltd.
-  </footer>
+  <!-- WHATSAPP -->
+  <div class="footer">
+    📲 Book a session: <a href="https://wa.me/447825954329" target="_blank">MessageGlovesUp</a><br>
+    Site built and upgraded by Hydra.
+  </div>
 
 </body>
 </html>

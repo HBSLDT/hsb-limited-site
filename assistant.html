@@ -1,1 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydra AI Assistant</title>
+  <style>
+    body {
+      background: #0d0d0d;
+      color: #eee;
+      font-family: 'Arial', sans-serif;
+      padding: 20px;
+    }
+    h1 {
+      text-align: center;
+    }
+    #chatbox {
+      background: #111;
+      border: 1px solid #333;
+      padding: 20px;
+      height: 400px;
+      overflow-y: scroll;
+      margin-bottom: 10px;
+      border-radius: 8px;
+    }
+    .user {
+      color: #0ff;
+    }
+    .bot {
+      color: #0f0;
+    }
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      border-radius: 5px;
+      border: none;
+      background: #222;
+      color: #eee;
+    }
+    button {
+      padding: 10px;
+      border: none;
+      background: #444;
+      color: #fff;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #666;
+    }
+    a {
+      display: block;
+      margin-top: 20px;
+      color: #00f0ff;
+      text-align: center;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
 
+  <h1>🤖 Hydra AI Assistant</h1>
+
+  <div id="chatbox"></div>
+
+  <input type="text" id="userInput" placeholder="Type your message..." />
+  <button onclick="sendMessage()">Send</button>
+
+  <a href="index.html">⬅️ Back to Main Site</a>
+
+  <script>
+    const chatbox = document.getElementById("chatbox");
+
+    const responses = {
+      "hello": "Hey! 👋 I'm Hydra AI. How can I help you today?",
+      "book": "To book a session, please message us directly or use the availability page 🥊",
+      "help": "I can assist with booking info, trainer questions, or pass your message to admin 💬",
+      "thanks": "You're welcome! Anything else I can do for you?",
+      "bye": "Goodbye! 👊 Stay sharp."
+    };
+
+    function sendMessage() {
+      const input = document.getElementById("userInput");
+      const userText = input.value.trim().toLowerCase();
+      if (userText === "") return;
+
+      appendMessage("user", userText);
+
+      const botReply = responses[userText] || "Sorry, I didn't understand that. Try 'book', 'help', or 'hello'.";
+      setTimeout(() => {
+        appendMessage("bot", botReply);
+      }, 600);
+
+      input.value = "";
+    }
+
+    function appendMessage(type, text) {
+      const div = document.createElement("div");
+      div.className = type;
+      div.innerText = (type === "user" ? "🧍 You: " : "🤖 AI: ") + text;
+      chatbox.appendChild(div);
+      chatbox.scrollTop = chatbox.scrollHeight;
+    }
+  </script>
+
+</body>
+</html>

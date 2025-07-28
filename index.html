@@ -3,221 +3,77 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hydra HQ – HBS Limited</title>
+  <title>Hydra HQ – AI Assistant</title>
   <style>
     body {
       margin: 0;
       font-family: 'Arial', sans-serif;
-      background: #0a0a0a;
-      color: white;
+      background: #000;
+      color: #eee;
       text-align: center;
     }
 
-    header {
-      background: #111;
-      padding: 20px 10px;
-      font-size: 26px;
-      font-weight: bold;
-      border-bottom: 2px solid #444;
-      color: #e5e4e2;
+    .logo {
+      width: 180px;
+      margin: 40px auto 10px;
+      display: block;
     }
 
-    .logo {
-      width: 160px;
-      margin: 30px auto 10px;
-      display: block;
+    header {
+      font-size: 28px;
+      font-weight: bold;
+      color: #FFD700;
+      margin-bottom: 10px;
     }
 
     .tagline {
       font-size: 14px;
-      color: #999;
-      margin-top: -10px;
-    }
-
-    .section {
-      margin: 40px auto 20px;
+      color: #888;
+      margin-bottom: 40px;
     }
 
     .button {
       display: block;
-      margin: 18px auto;
-      padding: 16px 30px;
+      margin: 20px auto;
+      padding: 15px 30px;
       border: none;
-      border-radius: 12px;
+      border-radius: 10px;
       font-size: 18px;
       font-weight: bold;
       cursor: pointer;
       width: 80%;
       max-width: 320px;
+      background: #FFD700;
+      color: black;
       transition: 0.3s;
     }
 
-    .glovesup {
-      background: #e5e4e2;
-      color: black;
-    }
-    .glovesup:hover {
-      background: #d2d2d2;
+    .button:hover {
+      background: #e6c200;
     }
 
-    .salesup {
-      background: #FFD700;
-      color: black;
-    }
-    .salesup:hover {
-      background: #e5be00;
-    }
-
-    .noexcuse {
-      background: #B76E79;
-    }
-    .noexcuse:hover {
-      background: #99525d;
-    }
-
-    .footer {
-      font-size: 14px;
+    footer {
+      font-size: 13px;
+      color: #555;
       margin-top: 60px;
-      padding-bottom: 100px;
-      color: #666;
-    }
-
-    .whatsapp a {
-      color: #25D366;
-      font-weight: bold;
-      text-decoration: none;
-    }
-
-    /* Chatbot */
-    .chatbox {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      width: 340px;
-      max-height: 500px;
-      background: #1a1a1a;
-      border: 2px solid #444;
-      border-radius: 12px;
-      box-shadow: 0 0 10px #000;
-      display: flex;
-      flex-direction: column;
-      font-size: 14px;
-      z-index: 999;
-    }
-
-    .chat-header {
-      background: #FFD700;
-      color: black;
-      padding: 10px;
-      font-weight: bold;
-      border-bottom: 1px solid #444;
-      border-top-left-radius: 10px;
-      border-top-right-radius: 10px;
-    }
-
-    .chat-body {
-      flex: 1;
-      overflow-y: auto;
-      padding: 10px;
-      color: #eee;
-    }
-
-    .chat-input {
-      display: flex;
-      padding: 10px;
-      border-top: 1px solid #333;
-    }
-
-    .chat-input input {
-      flex: 1;
-      padding: 8px;
-      border: none;
-      border-radius: 8px;
-      background: #333;
-      color: #fff;
-    }
-
-    .chat-input button {
-      margin-left: 8px;
-      padding: 8px 12px;
-      border: none;
-      border-radius: 8px;
-      background: #FFD700;
-      color: black;
-      font-weight: bold;
-      cursor: pointer;
+      padding-bottom: 40px;
     }
   </style>
 </head>
 <body>
 
-  <!-- LOGO -->
-  <img src="6EE78258-0F40-4F4A-A2C6-67FF419C38E0.jpeg" alt="Hydra HQ Logo" class="logo" />
+  <img src="6EE78258-0F40-4F4A-A2C6-67FF419C38E0.jpeg" alt="Hydra Logo" class="logo" />
 
-  <!-- HEADER -->
-  <header>Welcome to Hydra HQ<br><span class="tagline">Powered by HBS Limited</span></header>
+  <header>Welcome to Hydra HQ</header>
+  <div class="tagline">The Command Centre of HBS Limited</div>
 
-  <!-- BUTTONS -->
-  <div class="section">
-    <button class="button glovesup" onclick="location.href='https://noexcusefit.gumroad.com/l/lauiq'">🥊 Gloves Up Boxing</button>
-    <button class="button salesup" onclick="location.href='https://noexcusefit.gumroad.com/l/wownvr'">💰 Sales Up</button>
-    <button class="button noexcuse" onclick="location.href='https://noexcusefit.gumroad.com/l/hwtuj'">🔥 No Excuse Fitness</button>
-  </div>
+  <button class="button" onclick="location.href='ai.html'">💬 Talk to Hydra AI</button>
+  <button class="button" onclick="location.href='admin.html'">🔐 Admin Login</button>
 
-  <!-- WHATSAPP -->
-  <div class="footer whatsapp">
-    📲 Book a session: <a href="https://wa.me/447825954329" target="_blank">MessageGlovesUp</a><br>
-    Site built and upgraded by Hydra.
-  </div>
-
-  <!-- HYDRA AI Chatbox (REAL OpenAI Integration) -->
-  <div class="chatbox">
-    <div class="chat-header">🤖 Hydra AI Assistant</div>
-    <div class="chat-body" id="chatBody">
-      <div><b>Hydra AI:</b> Welcome to Hydra HQ. Ask me anything about Gloves Up, Sales Up, or NEF.</div>
-    </div>
-    <div class="chat-input">
-      <input type="text" id="userInput" placeholder="Ask me something..." />
-      <button onclick="sendMessage()">Send</button>
-    </div>
-  </div>
-
-  <script>
-    async function sendMessage() {
-      const input = document.getElementById("userInput");
-      const chatBody = document.getElementById("chatBody");
-      const userMsg = input.value.trim();
-      if (!userMsg) return;
-
-      chatBody.innerHTML += `<div><b>You:</b> ${userMsg}</div>`;
-      input.value = "";
-
-      const apiKey = "YOUR_OPENAI_API_KEY"; // <-- 🔥 Replace this with your actual OpenAI API key
-
-      const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": `Bearer ${apiKey}`
-        },
-        body: JSON.stringify({
-          model: "gpt-3.5-turbo",
-          messages: [
-            { role: "system", content: "You are Hydra AI, an assistant that helps users understand Gloves Up Boxing, Sales Up strategy, and No Excuse Fitness plans." },
-            { role: "user", content: userMsg }
-          ],
-          temperature: 0.7
-        })
-      });
-
-      const data = await response.json();
-      const aiReply = data.choices?.[0]?.message?.content || "Sorry, I didn’t get that.";
-
-      chatBody.innerHTML += `<div><b>Hydra AI:</b> ${aiReply}</div>`;
-      chatBody.scrollTop = chatBody.scrollHeight;
-    }
-  </script>
+  <footer>
+    Hydra HQ System © 2025<br>
+    Developed by HBS Ltd.
+  </footer>
 
 </body>
 </html>
-

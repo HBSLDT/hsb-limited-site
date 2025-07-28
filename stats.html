@@ -3,144 +3,59 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hydra Stats Board</title>
+  <title>Seller Stats | Hydra HQ</title>
   <style>
     body {
+      background-color: #0b0b0b;
+      color: #eee;
+      font-family: Arial, sans-serif;
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #000;
-      color: #fff;
-      padding: 20px;
+      padding: 30px;
     }
-    header {
-      font-size: 30px;
-      text-align: center;
-      padding: 20px;
+    .container {
+      max-width: 600px;
+      margin: auto;
       background: #111;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #000;
     }
-    .section {
-      margin: 30px 0;
-    }
-    h2 {
-      border-bottom: 2px solid #333;
-      padding-bottom: 5px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-    }
-    th, td {
-      padding: 10px;
-      border: 1px solid #444;
+    h1 {
       text-align: center;
+      margin-bottom: 30px;
     }
-    th {
-      background-color: #222;
+    .stat-box {
+      background: #222;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 15px;
+      font-size: 1.2rem;
+      line-height: 1.5;
     }
-    input {
-      width: 100%;
-      padding: 5px;
-      margin-top: 4px;
-      background-color: #111;
-      color: white;
-      border: 1px solid #555;
-      border-radius: 4px;
-    }
-    .btn {
-      margin-top: 10px;
-      padding: 10px 20px;
-      background-color: #444;
-      border: none;
-      color: white;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    .btn:hover {
-      background-color: #666;
-    }
-    .back {
-      display: inline-block;
-      margin-top: 30px;
-      text-decoration: none;
+    a {
+      display: block;
+      text-align: center;
+      margin-top: 20px;
       color: #aaa;
+      text-decoration: none;
+    }
+    a:hover {
+      color: #fff;
     }
   </style>
 </head>
 <body>
 
-  <header>📈 Hydra Live Stats Panel</header>
-
-  <!-- BOOKINGS STATS -->
-  <div class="section">
-    <h2>🗓 Weekly Bookings Overview</h2>
-    <table id="bookingTable">
-      <tr>
-        <th>Day</th>
-        <th>Sessions Booked</th>
-        <th>Sessions Free</th>
-        <th>Update</th>
-      </tr>
-      <tr>
-        <td>Monday</td>
-        <td><input type="number" id="monBooked" value="0"></td>
-        <td><input type="number" id="monFree" value="0"></td>
-        <td><button class="btn" onclick="updateDay('mon')">✅</button></td>
-      </tr>
-      <tr>
-        <td>Tuesday</td>
-        <td><input type="number" id="tueBooked" value="0"></td>
-        <td><input type="number" id="tueFree" value="0"></td>
-        <td><button class="btn" onclick="updateDay('tue')">✅</button></td>
-      </tr>
-      <!-- Add more days as needed -->
-    </table>
+  <div class="container">
+    <h1>📊 Live Seller Stats</h1>
+    <div id="sellerStatsDisplay" class="stat-box">Loading...</div>
+    <a href="index.html">⬅️ Back to Hydra HQ</a>
   </div>
-
-  <!-- SELLER PERFORMANCE STATS -->
-  <div class="section">
-    <h2>💰 Seller Performance</h2>
-    <table id="sellerTable">
-      <tr>
-        <th>Name</th>
-        <th>Code</th>
-        <th>Sales</th>
-        <th>Earnings (£)</th>
-        <th>Update</th>
-      </tr>
-      <tr>
-        <td><input id="sellerName1" value="Reece"></td>
-        <td><input id="sellerCode1" value="RC123"></td>
-        <td><input type="number" id="sales1" value="0"></td>
-        <td><input type="number" id="earnings1" value="0"></td>
-        <td><button class="btn" onclick="updateSeller(1)">✅</button></td>
-      </tr>
-      <tr>
-        <td><input id="sellerName2" value="Harley"></td>
-        <td><input id="sellerCode2" value="HL456"></td>
-        <td><input type="number" id="sales2" value="0"></td>
-        <td><input type="number" id="earnings2" value="0"></td>
-        <td><button class="btn" onclick="updateSeller(2)">✅</button></td>
-      </tr>
-    </table>
-  </div>
-
-  <a class="back" href="dashboard.html">← Return to Control Panel</a>
 
   <script>
-    function updateDay(day) {
-      const booked = document.getElementById(`${day}Booked`).value;
-      const free = document.getElementById(`${day}Free`).value;
-      alert(`📅 ${day.charAt(0).toUpperCase() + day.slice(1)} updated:\nBooked: ${booked} | Free: ${free}`);
-    }
-
-    function updateSeller(num) {
-      const name = document.getElementById(`sellerName${num}`).value;
-      const code = document.getElementById(`sellerCode${num}`).value;
-      const sales = document.getElementById(`sales${num}`).value;
-      const earnings = document.getElementById(`earnings${num}`).value;
-      alert(`💼 Seller Updated:\nName: ${name}\nCode: ${code}\nSales: ${sales}\nEarnings: £${earnings}`);
-    }
+    const savedStats = localStorage.getItem("sellerStats");
+    const display = document.getElementById("sellerStatsDisplay");
+    display.innerText = savedStats ? savedStats : "No stats available yet.";
   </script>
 
 </body>

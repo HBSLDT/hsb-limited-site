@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hydra Admin Control – HBS Ltd</title>
+  <title>Hydra Admin Login</title>
   <style>
     body {
       font-family: 'Arial', sans-serif;
@@ -15,30 +15,25 @@
     h1 {
       text-align: center;
       font-size: 28px;
-      margin-bottom: 30px;
     }
-    .section {
+    .login-section, .dashboard {
+      max-width: 600px;
+      margin: 40px auto;
       background: #111;
-      padding: 20px;
-      border-radius: 10px;
-      margin-bottom: 30px;
+      padding: 30px;
+      border-radius: 12px;
     }
-    label {
-      display: block;
-      margin-bottom: 8px;
-      font-weight: bold;
-    }
-    input, textarea {
+    input {
       width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: none;
-      border-radius: 6px;
+      padding: 15px;
+      margin-bottom: 20px;
       font-size: 16px;
+      border-radius: 6px;
+      border: none;
     }
     button {
       background: #FFD700;
-      color: #000;
+      color: black;
       font-weight: bold;
       padding: 12px 20px;
       border: none;
@@ -47,15 +42,6 @@
     }
     button:hover {
       background: #e6c200;
-    }
-    .upload-zone {
-      border: 2px dashed #555;
-      padding: 20px;
-      text-align: center;
-      margin-top: 10px;
-    }
-    .upload-zone:hover {
-      border-color: #FFD700;
     }
     table {
       width: 100%;
@@ -74,56 +60,57 @@
 </head>
 <body>
 
-  <h1>Hydra HQ – Super Admin Control</h1>
+  <!-- Login Section -->
+  <div class="login-section" id="loginSection">
+    <h1>Admin Login</h1>
+    <input type="password" id="adminCode" placeholder="Enter admin code..." />
+    <button onclick="checkLogin()">Unlock</button>
+    <p id="loginError" style="color:red;"></p>
+  </div>
 
-  <!-- Seller Stats -->
-  <div class="section">
+  <!-- Dashboard Section -->
+  <div class="dashboard" id="adminDashboard" style="display:none;">
+    <h1>Hydra HQ – Admin Dashboard</h1>
+
     <h2>📊 Seller Performance</h2>
-    <label for="sellerName">Seller Name</label>
-    <input type="text" id="sellerName" placeholder="e.g. Reece">
-
-    <label for="salesCount">Total Sales</label>
-    <input type="number" id="salesCount" placeholder="e.g. 12">
-
-    <label for="earnings">Total Earnings (£)</label>
-    <input type="number" id="earnings" placeholder="e.g. 240">
-
-    <label for="sellerCode">Referral Code</label>
-    <input type="text" id="sellerCode" placeholder="e.g. DR35741">
-
-    <button onclick="saveSeller()">💾 Save Seller Data</button>
+    <input id="sellerName" placeholder="Seller Name (e.g. Reece)">
+    <input id="salesCount" type="number" placeholder="Total Sales">
+    <input id="earnings" type="number" placeholder="Total Earnings (£)">
+    <input id="sellerCode" placeholder="Referral Code">
+    <button onclick="saveSeller()">💾 Save Seller</button>
 
     <table id="sellerTable">
       <thead>
-        <tr>
-          <th>Name</th>
-          <th>Sales</th>
-          <th>£ Earnings</th>
-          <th>Code</th>
-        </tr>
+        <tr><th>Name</th><th>Sales</th><th>Earnings</th><th>Code</th></tr>
       </thead>
       <tbody></tbody>
     </table>
-  </div>
 
-  <!-- Session Updates -->
-  <div class="section">
-    <h2>🗓️ Edit Weekly Session Times</h2>
-    <label for="sessionText">Session Availability</label>
-    <textarea id="sessionText" rows="6" placeholder="Mon: 7AM–10AM..."></textarea>
-    <button onclick="saveSessions()">📝 Save Sessions</button>
-    <p id="savedSessions" style="margin-top: 10px;"></p>
-  </div>
-
-  <!-- Upload Contracts (Simulation) -->
-  <div class="section">
-    <h2>📎 Upload Signed Contracts</h2>
-    <input type="file" id="contractUpload" accept=".pdf,.jpg,.jpeg,.png">
-    <div class="upload-zone">📂 Drag and drop or click above to select a file</div>
-    <button onclick="uploadContract()">⬆️ Upload Contract</button>
+    <h2 style="margin-top:40px;">🗓️ Edit Weekly Sessions</h2>
+    <textarea id="sessionText" rows="5" placeholder="e.g. Mon: 7AM–10AM..."></textarea>
+    <button onclick="saveSessions()">Save Sessions</button>
+    <p id="savedSessions" style="margin-top:10px;"></p>
   </div>
 
   <script>
+    const correctCode = "HBS123";
+
+    function checkLogin() {
+      const entered = document.getElementById("adminCode").value;
+      if (entered === correctCode) {
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("adminDashboard").style.display = "block";
+        renderSellerTable();
+        const savedSessions = localStorage.getItem("sessions");
+        if (savedSessions) {
+          document.getElementById("sessionText").value = savedSessions;
+          document.getElementById("savedSessions").innerText = "✅ " + savedSessions;
+        }
+      } else {
+        document.getElementById("loginError").innerText = "❌ Incorrect code.";
+      }
+    }
+
     let sellers = JSON.parse(localStorage.getItem("sellers")) || [];
 
     function saveSeller() {
@@ -132,55 +119,29 @@
       const earnings = document.getElementById('earnings').value.trim();
       const code = document.getElementById('sellerCode').value.trim();
 
-      if (!name || !sales || !earnings || !code) return alert("Fill in all fields!");
+      if (!name || !sales || !earnings || !code) return alert("Please fill in all seller fields!");
 
       sellers.push({ name, sales, earnings, code });
       localStorage.setItem("sellers", JSON.stringify(sellers));
       renderSellerTable();
-      clearInputs();
+      document.getElementById('sellerName').value = '';
+      document.getElementById('salesCount').value = '';
+      document.getElementById('earnings').value = '';
+      document.getElementById('sellerCode').value = '';
     }
 
     function renderSellerTable() {
       const tableBody = document.querySelector("#sellerTable tbody");
       tableBody.innerHTML = "";
       sellers.forEach(s => {
-        const row = `<tr>
-          <td>${s.name}</td>
-          <td>${s.sales}</td>
-          <td>£${s.earnings}</td>
-          <td>${s.code}</td>
-        </tr>`;
-        tableBody.innerHTML += row;
+        tableBody.innerHTML += `<tr><td>${s.name}</td><td>${s.sales}</td><td>£${s.earnings}</td><td>${s.code}</td></tr>`;
       });
     }
 
-    function clearInputs() {
-      document.getElementById('sellerName').value = "";
-      document.getElementById('salesCount').value = "";
-      document.getElementById('earnings').value = "";
-      document.getElementById('sellerCode').value = "";
-    }
-
     function saveSessions() {
-      const sessionData = document.getElementById('sessionText').value;
-      localStorage.setItem("sessions", sessionData);
-      document.getElementById("savedSessions").innerText = "✅ " + sessionData;
-    }
-
-    function uploadContract() {
-      const fileInput = document.getElementById('contractUpload');
-      if (!fileInput.files.length) return alert("Select a file!");
-      alert("✅ File uploaded (fake simulation). Upgrade this later with file backend.");
-    }
-
-    // Load everything on page load
-    window.onload = () => {
-      renderSellerTable();
-      const savedSessions = localStorage.getItem("sessions");
-      if (savedSessions) {
-        document.getElementById("sessionText").value = savedSessions;
-        document.getElementById("savedSessions").innerText = "✅ " + savedSessions;
-      }
+      const text = document.getElementById("sessionText").value;
+      localStorage.setItem("sessions", text);
+      document.getElementById("savedSessions").innerText = "✅ " + text;
     }
   </script>
 

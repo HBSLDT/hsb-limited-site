@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hydra Booking Assistant</title>
+  <title>Hydra Booking Assistant v2</title>
   <style>
     body {
       margin: 0;
@@ -15,17 +15,19 @@
       height: 100vh;
     }
     header {
-      background: #111;
+      background: linear-gradient(to right, #00ffff, #006eff);
       padding: 20px;
       text-align: center;
       font-size: 20px;
       font-weight: bold;
-      color: #00ffff;
+      color: #000;
     }
     #chat {
       flex: 1;
       padding: 20px;
       overflow-y: auto;
+      display: flex;
+      flex-direction: column;
     }
     .msg {
       margin: 10px 0;
@@ -34,7 +36,7 @@
       max-width: 80%;
     }
     .bot {
-      background: #222;
+      background: #1a1a1a;
       align-self: flex-start;
     }
     .user {
@@ -46,6 +48,17 @@
       display: flex;
       padding: 10px;
       background: #111;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .quick-btn {
+      background: #00ffff;
+      color: #000;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
     }
     #input {
       flex: 1;
@@ -55,7 +68,6 @@
       font-size: 16px;
     }
     button {
-      margin-left: 10px;
       padding: 10px 20px;
       background: #00ffff;
       border: none;
@@ -70,7 +82,7 @@
 <header>Hydra Booking Assistant 🤖</header>
 
 <div id="chat">
-  <div class="msg bot">Welcome to Hydra HQ 👋 Ready to book your session?</div>
+  <div class="msg bot">Welcome to Hydra HQ 👋<br>Ready to book a session?</div>
 </div>
 
 <div id="input-area">
@@ -80,16 +92,14 @@
 
 <script>
   const chat = document.getElementById("chat");
+  const input = document.getElementById("input");
   let step = 0;
-  let booking = {
-    day: "",
-    time: ""
-  };
+  let booking = { day: "", time: "" };
 
   function addMessage(text, sender) {
     const msg = document.createElement("div");
     msg.className = `msg ${sender}`;
-    msg.innerText = text;
+    msg.innerHTML = text;
     chat.appendChild(msg);
     chat.scrollTop = chat.scrollHeight;
   }
@@ -99,41 +109,50 @@
   }
 
   function sendMessage() {
-    const input = document.getElementById("input");
     const text = input.value.trim();
     if (!text) return;
     addMessage(text, "user");
     input.value = "";
 
+    handleInput(text);
+  }
+
+  function handleInput(text) {
     if (step === 0) {
-      botReply("Nice one! What day are you looking to train?");
+      booking.day = text;
+      botReply("Great — what time works for you?");
       step = 1;
     } else if (step === 1) {
-      booking.day = text;
-      botReply("Cool. And what time?");
-      step = 2;
-    } else if (step === 2) {
       booking.time = text;
       const link = `https://wa.me/447825954329?text=Hi%2C%20I%27d%20like%20to%20book%20a%20session%20on%20${encodeURIComponent(booking.day)}%20at%20${encodeURIComponent(booking.time)}.%20Is%20that%20still%20available%3F`;
-      botReply("Give me a sec…");
+      botReply("One sec...");
       setTimeout(() => {
-        botReply("All done ✅ Tap below to confirm your session on WhatsApp:");
-        const confirm = document.createElement("a");
-        confirm.href = link;
-        confirm.target = "_blank";
-        confirm.innerText = "📲 MessageGlovesUp";
-        confirm.style.color = "#00ffff";
-        confirm.style.display = "block";
-        confirm.style.marginTop = "10px";
-        chat.appendChild(confirm);
-        chat.scrollTop = chat.scrollHeight;
-      }, 1500);
-      step = 3;
+        botReply(`✅ Booking link ready. Tap below to message me on WhatsApp: <br><a href="${link}" target="_blank" style="color:#00ffff;">📲 Message Gloves Up</a>`);
+        step = 2;
+      }, 1000);
     } else {
-      botReply("Want to book another one? Just type the day!");
-      step = 1;
+      botReply("Want to book another? Just type the new day 🥊");
+      step = 0;
     }
   }
+
+  // Optional Quick Reply Buttons
+  function addQuickButtons() {
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    days.forEach(day => {
+      const btn = document.createElement("button");
+      btn.className = "quick-btn";
+      btn.innerText = day;
+      btn.onclick = () => {
+        input.value = day;
+        sendMessage();
+      };
+      document.getElementById("input-area").appendChild(btn);
+    });
+  }
+
+  // Add buttons after greeting
+  setTimeout(() => addQuickButtons(), 1000);
 </script>
 
 </body>

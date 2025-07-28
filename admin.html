@@ -2,164 +2,144 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Hydra Admin Panel</title>
   <style>
     body {
       margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to right, #000000, #111111);
+      font-family: 'Arial', sans-serif;
+      background: #0a0a0a;
       color: #eee;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center;
-      min-height: 100vh;
+      padding: 40px 20px;
     }
-
     h1 {
-      font-size: 2.5rem;
       color: #00ffff;
+      margin-bottom: 10px;
     }
-
-    #login-box {
-      background: #1a1a1a;
+    .login-box, .admin-panel {
+      background: #111;
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
+      box-shadow: 0 0 20px rgba(0,255,255,0.2);
+      max-width: 400px;
+      width: 100%;
       text-align: center;
     }
-
-    input[type="password"],
-    input[type="time"],
-    select {
-      width: 80%;
+    input, select, button {
+      width: 100%;
       padding: 10px;
       margin: 10px 0;
+      font-size: 1rem;
       border: none;
       border-radius: 5px;
-      background: #333;
+    }
+    input[type="text"], input[type="time"], select {
+      background: #222;
       color: #eee;
     }
-
     button {
-      padding: 10px 25px;
       background: #00ffff;
-      border: none;
-      border-radius: 5px;
-      font-weight: bold;
       color: #000;
+      font-weight: bold;
       cursor: pointer;
-      transition: background 0.3s ease;
     }
-
-    button:hover {
-      background: #00cccc;
-    }
-
-    #admin-content {
+    .hidden {
       display: none;
-      max-width: 500px;
-      margin-top: 30px;
-      background: #141414;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
     }
-
+    .success-message {
+      color: #0f0;
+      margin-top: 20px;
+    }
+    .return-link {
+      display: inline-block;
+      margin-top: 20px;
+      color: #00ffff;
+      text-decoration: underline;
+    }
     ul {
-      padding-left: 20px;
-    }
-
-    li {
-      margin-bottom: 5px;
-      font-size: 15px;
-    }
-
-    label {
-      display: block;
+      padding-left: 0;
+      list-style-type: none;
       text-align: left;
-      margin-top: 10px;
     }
-
-    .success-msg {
-      color: #00ff00;
-      margin-top: 15px;
+    li {
+      padding: 5px 0;
+      border-bottom: 1px solid #333;
     }
   </style>
 </head>
 <body>
+
   <h1>Hydra Admin Panel</h1>
 
-  <div id="login-box">
-    <p>Enter admin code to unlock panel:</p>
-    <input type="password" id="codeInput" placeholder="Enter code..." />
-    <br />
+  <div class="login-box" id="login-box">
+    <p>Enter code to unlock admin access:</p>
+    <input type="password" id="adminCode" placeholder="Enter code..." />
     <button onclick="checkCode()">Login</button>
-    <p id="login-status" class="success-msg"></p>
+    <p id="loginMessage" class="success-message hidden">✅ Access granted. You may now edit session availability.</p>
   </div>
 
-  <div id="admin-content">
-    <h2>📅 Edit Session Availability</h2>
-    <form id="availability-form">
-      <label for="day">Day:</label>
-      <select id="day">
-        <option>Monday</option>
-        <option>Tuesday</option>
-        <option>Wednesday</option>
-        <option>Thursday</option>
-        <option>Friday</option>
-        <option>Saturday</option>
+  <div class="admin-panel hidden" id="adminPanel">
+    <h2>Edit Session Availability</h2>
+    <form id="availabilityForm">
+      <select id="day" required>
+        <option value="" disabled selected>Select a day</option>
+        <option value="Monday">Monday</option>
+        <option value="Tuesday">Tuesday</option>
+        <option value="Wednesday">Wednesday</option>
+        <option value="Thursday">Thursday</option>
+        <option value="Friday">Friday</option>
+        <option value="Saturday">Saturday</option>
       </select>
-
-      <label for="start">Start Time:</label>
-      <input type="time" id="start" />
-
-      <label for="end">End Time:</label>
-      <input type="time" id="end" />
-
-      <button type="submit">Save Time Slot</button>
+      <input type="time" id="start" required placeholder="Start Time" />
+      <input type="time" id="end" required placeholder="End Time" />
+      <button type="submit">Save Availability</button>
     </form>
-
-    <h3>✅ Current Availability:</h3>
-    <ul id="availability-list"></ul>
+    <div class="success-message hidden" id="formSaved">✅ Availability saved!</div>
+    <ul id="availabilityList"></ul>
+    <a class="return-link" href="index.html">← Return to Homepage</a>
   </div>
 
   <script>
-    const correctCode = "HBS123";
+    const CODE = "HBS123";
     const loginBox = document.getElementById("login-box");
-    const adminContent = document.getElementById("admin-content");
-    const loginStatus = document.getElementById("login-status");
-    const availabilityForm = document.getElementById("availability-form");
-    const availabilityList = document.getElementById("availability-list");
-    let savedSlots = [];
+    const adminPanel = document.getElementById("adminPanel");
+    const loginMessage = document.getElementById("loginMessage");
+    const availabilityForm = document.getElementById("availabilityForm");
+    const formSaved = document.getElementById("formSaved");
+    const availabilityList = document.getElementById("availabilityList");
 
     function checkCode() {
-      const input = document.getElementById("codeInput").value.trim();
-      if (input === correctCode) {
-        loginBox.style.display = "none";
-        adminContent.style.display = "block";
-        loginStatus.textContent = "";
+      const inputCode = document.getElementById("adminCode").value;
+      if (inputCode === CODE) {
+        loginBox.classList.add("hidden");
+        adminPanel.classList.remove("hidden");
+        loginMessage.classList.remove("hidden");
       } else {
-        loginStatus.textContent = "❌ Incorrect code.";
+        alert("❌ Incorrect code. Try again.");
       }
     }
 
-    if (availabilityForm) {
-      availabilityForm.addEventListener("submit", function (e) {
-        e.preventDefault();
-        const day = document.getElementById("day").value;
-        const start = document.getElementById("start").value;
-        const end = document.getElementById("end").value;
-        if (start && end) {
-          const slot = `${day}: ${start}–${end}`;
-          savedSlots.push(slot);
-          updateList();
-        }
-      });
-    }
+    const savedSlots = [];
 
-    function updateList() {
+    availabilityForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const day = document.getElementById("day").value;
+      const start = document.getElementById("start").value;
+      const end = document.getElementById("end").value;
+
+      if (day && start && end) {
+        const slot = `${day}: ${start}–${end}`;
+        savedSlots.push(slot);
+        updateAvailabilityList();
+        availabilityForm.reset();
+        formSaved.classList.remove("hidden");
+      }
+    });
+
+    function updateAvailabilityList() {
       availabilityList.innerHTML = "";
       savedSlots.forEach(slot => {
         const li = document.createElement("li");
@@ -168,5 +148,6 @@
       });
     }
   </script>
+
 </body>
 </html>

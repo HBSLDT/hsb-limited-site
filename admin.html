@@ -7,101 +7,150 @@
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      background: #000;
-      color: white;
+      background: #0b0c10;
+      font-family: 'Segoe UI', sans-serif;
+      color: #e0e0e0;
     }
-    header {
-      background: #111;
-      padding: 20px;
-      text-align: center;
-      font-size: 28px;
-      font-weight: bold;
+    .container {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 2rem;
     }
-    .input, textarea {
-      width: 90%;
-      max-width: 700px;
-      margin: 20px auto;
-      display: block;
-      padding: 12px;
-      font-size: 16px;
-      border-radius: 6px;
-      border: 1px solid #444;
-      background: #111;
-      color: white;
+    h1, h2 {
+      color: #66fcf1;
+    }
+    .section {
+      background: #1f2833;
+      padding: 1rem;
+      margin-top: 2rem;
+      border-radius: 8px;
+    }
+    label, p {
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    input, textarea, select {
+      width: 100%;
+      padding: 0.6rem;
+      margin-bottom: 1rem;
+      border-radius: 4px;
+      border: none;
+      background: #c5c6c7;
+      color: #000;
+      font-size: 1rem;
     }
     button {
-      display: block;
-      margin: 15px auto;
-      padding: 12px 24px;
-      font-size: 16px;
+      background: #45a29e;
+      color: #fff;
+      padding: 0.7rem 1.5rem;
       border: none;
-      border-radius: 6px;
+      border-radius: 4px;
       cursor: pointer;
-      background: #25D366;
-      color: black;
-      font-weight: bold;
     }
-    .hidden { display: none; }
-    .footer {
-      text-align: center;
-      margin: 40px 0;
-      font-size: 14px;
-      color: #777;
+    .hidden {
+      display: none;
     }
-    .back-btn {
-      background: #444;
-      color: white;
+    #logoutBtn {
+      background: #c0392b;
+      float: right;
     }
   </style>
 </head>
-<body onload="loadSchedule()">
+<body>
+  <div class="container">
+    <h1>Hydra HQ Admin Panel</h1>
 
-  <header>🛡 Hydra HQ Admin Access</header>
+    <!-- LOGIN -->
+    <div id="loginSection">
+      <label for="adminCode">Enter Admin Code:</label>
+      <input type="password" id="adminCode" placeholder="Enter code..." />
+      <button onclick="checkCode()">Login</button>
+    </div>
 
-  <div id="login-section">
-    <input class="input" type="password" id="adminCode" placeholder="Enter admin code" />
-    <button onclick="checkCode()">✅ Unlock Panel</button>
+    <!-- MAIN PANEL -->
+    <div id="adminPanel" class="hidden">
+      <button id="logoutBtn" onclick="logout()">Logout</button>
+
+      <!-- SCHEDULE SECTION -->
+      <div class="section">
+        <h2>Edit Weekly Session Schedule</h2>
+        <textarea id="scheduleBox" rows="10" placeholder="Paste updated schedule here..."></textarea>
+        <button onclick="saveSchedule()">Save Schedule</button>
+        <p id="scheduleSavedMsg"></p>
+      </div>
+
+      <!-- SELLER PERFORMANCE -->
+      <div class="section">
+        <h2>Seller Performance</h2>
+        <label>Seller Name:</label>
+        <input type="text" id="sellerName" placeholder="e.g. Reece" />
+        <label>Code:</label>
+        <input type="text" id="sellerCode" placeholder="e.g. R001" />
+        <label>Total Sales:</label>
+        <input type="number" id="sellerSales" />
+        <label>Total Earnings (£):</label>
+        <input type="number" id="sellerEarnings" />
+        <button onclick="saveSeller()">Save Seller Stats</button>
+        <p id="sellerSavedMsg"></p>
+      </div>
+
+      <!-- FILE UPLOAD -->
+      <div class="section">
+        <h2>Upload Signed Contracts</h2>
+        <input type="file" id="contractFile" />
+        <button onclick="uploadContract()">Upload</button>
+        <p id="uploadMsg"></p>
+      </div>
+
+      <!-- RETURN HOME -->
+      <div class="section">
+        <button onclick="window.location.href='index.html'">⬅ Return to Main Site</button>
+      </div>
+    </div>
   </div>
-
-  <div id="admin-section" class="hidden">
-    <h2 style="text-align:center;">✏️ Edit Weekly Session Schedule</h2>
-    <textarea id="scheduleInput" rows="18" placeholder="Paste updated schedule here..."></textarea>
-    <button onclick="saveSchedule()">✅ Save Schedule</button>
-
-    <button class="back-btn" onclick="goHome()">⬅ Return to Main Page</button>
-  </div>
-
-  <div class="footer">Built for Hydra HQ – Version 1.0M</div>
 
   <script>
+    const correctCode = "HBS123";
+
     function checkCode() {
       const input = document.getElementById("adminCode").value;
-      if (input === "HBS123") {
-        document.getElementById("login-section").classList.add("hidden");
-        document.getElementById("admin-section").classList.remove("hidden");
+      if (input === correctCode) {
+        document.getElementById("loginSection").style.display = "none";
+        document.getElementById("adminPanel").classList.remove("hidden");
       } else {
-        alert("❌ Incorrect code");
+        alert("Incorrect code. Try again.");
       }
+    }
+
+    function logout() {
+      location.reload();
     }
 
     function saveSchedule() {
-      const schedule = document.getElementById("scheduleInput").value;
-      localStorage.setItem("hydraWeeklySchedule", schedule);
-      alert("✅ Schedule saved. Return to main site to see update.");
+      const data = document.getElementById("scheduleBox").value;
+      localStorage.setItem("hydraSchedule", data);
+      document.getElementById("scheduleSavedMsg").innerText = "✅ Schedule saved.";
     }
 
-    function loadSchedule() {
-      const saved = localStorage.getItem("hydraWeeklySchedule");
-      if (saved) {
-        document.getElementById("scheduleInput").value = saved;
+    function saveSeller() {
+      const name = document.getElementById("sellerName").value;
+      const code = document.getElementById("sellerCode").value;
+      const sales = document.getElementById("sellerSales").value;
+      const earnings = document.getElementById("sellerEarnings").value;
+      const sellerData = { name, code, sales, earnings };
+      localStorage.setItem("seller_" + code, JSON.stringify(sellerData));
+      document.getElementById("sellerSavedMsg").innerText = `✅ Stats saved for ${name}.`;
+    }
+
+    function uploadContract() {
+      const fileInput = document.getElementById("contractFile");
+      const file = fileInput.files[0];
+      if (!file) {
+        document.getElementById("uploadMsg").innerText = "⚠️ No file selected.";
+        return;
       }
-    }
-
-    function goHome() {
-      window.location.href = "index.html"; // Adjust if your homepage file name is different
+      document.getElementById("uploadMsg").innerText = `✅ ${file.name} ready for upload (this demo doesn't store files).`;
     }
   </script>
-
 </body>
 </html>

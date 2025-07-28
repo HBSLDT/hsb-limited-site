@@ -3,134 +3,157 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hydra Admin Panel</title>
+  <title>Hydra Booking Assistant v2</title>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #0a0a0a;
-      color: #eee;
       margin: 0;
-      padding: 20px;
+      font-family: 'Arial', sans-serif;
+      background: #000;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
     }
-    h1, h2 {
+    header {
+      background: linear-gradient(to right, #00ffff, #006eff);
+      padding: 20px;
       text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: #000;
     }
-    .section {
-      background: #111;
+    #chat {
+      flex: 1;
       padding: 20px;
-      margin-bottom: 30px;
-      border-radius: 8px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
     }
-    input[type="password"],
-    input[type="text"],
-    textarea {
-      width: 100%;
-      padding: 10px;
+    .msg {
       margin: 10px 0;
-      background: #222;
-      color: #fff;
-      border: 1px solid #444;
+      padding: 10px 15px;
+      border-radius: 10px;
+      max-width: 80%;
+    }
+    .bot {
+      background: #1a1a1a;
+      align-self: flex-start;
+    }
+    .user {
+      background: #00ffff;
+      color: #000;
+      align-self: flex-end;
+    }
+    #input-area {
+      display: flex;
+      padding: 10px;
+      background: #111;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .quick-btn {
+      background: #00ffff;
+      color: #000;
+      border: none;
+      padding: 8px 16px;
       border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    #input {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
     }
     button {
       padding: 10px 20px;
-      background: #444;
-      color: white;
+      background: #00ffff;
       border: none;
       border-radius: 5px;
       cursor: pointer;
-    }
-    button:hover {
-      background: #666;
-    }
-    .hidden {
-      display: none;
-    }
-    .file-upload {
-      margin-top: 10px;
-    }
-    a.return-home {
-      display: inline-block;
-      margin-top: 30px;
-      text-align: center;
-      background: #333;
-      color: #fff;
-      padding: 10px 20px;
-      text-decoration: none;
-      border-radius: 6px;
-    }
-    a.return-home:hover {
-      background: #555;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
 
-  <div id="loginSection" class="section">
-    <h1>Admin Login</h1>
-    <input type="password" id="adminCode" placeholder="Enter Admin Code">
-    <button onclick="checkCode()">Login</button>
-    <p id="loginError" style="color: red;"></p>
-  </div>
+<header>Hydra Booking Assistant 🤖</header>
 
-  <div id="adminPanel" class="hidden">
+<div id="chat">
+  <div class="msg bot">Welcome to Hydra HQ 👋<br>Ready to book a session?</div>
+</div>
 
-    <div class="section">
-      <h2>🗓 Edit Weekly Sessions</h2>
-      <textarea id="sessionText" rows="10" placeholder="Paste session schedule here..."></textarea>
-      <button onclick="saveSessions()">Save Schedule</button>
-      <p id="saveStatus"></p>
-    </div>
+<div id="input-area">
+  <input type="text" id="input" placeholder="Type here..." />
+  <button onclick="sendMessage()">Send</button>
+</div>
 
-    <div class="section">
-      <h2>📊 Seller Performance</h2>
-      <input type="text" id="sellerStats" placeholder="E.g. Reece: 14 sales – £420">
-      <button onclick="saveStats()">Save Stats</button>
-      <p id="statsSaved"></p>
-    </div>
+<script>
+  const chat = document.getElementById("chat");
+  const input = document.getElementById("input");
+  let step = 0;
+  let booking = { day: "", time: "" };
 
-    <div class="section">
-      <h2>📁 Upload Contracts</h2>
-      <input type="file" class="file-upload" id="contractUpload">
-      <p>Note: File uploads are local only (not stored online).</p>
-    </div>
+  function addMessage(text, sender) {
+    const msg = document.createElement("div");
+    msg.className = `msg ${sender}`;
+    msg.innerHTML = text;
+    chat.appendChild(msg);
+    chat.scrollTop = chat.scrollHeight;
+  }
 
-    <div style="text-align:center;">
-      <a href="index.html" class="return-home">🏠 Return to Hydra HQ</a>
-    </div>
+  function botReply(text, delay = 600) {
+    setTimeout(() => addMessage(text, "bot"), delay);
+  }
 
-  </div>
+  function sendMessage() {
+    const text = input.value.trim();
+    if (!text) return;
+    addMessage(text, "user");
+    input.value = "";
 
-  <script>
-    function checkCode() {
-      const input = document.getElementById("adminCode").value;
-      if (input === "HBS123") {
-        document.getElementById("loginSection").classList.add("hidden");
-        document.getElementById("adminPanel").classList.remove("hidden");
-      } else {
-        document.getElementById("loginError").innerText = "Incorrect code. Try again.";
-      }
+    handleInput(text);
+  }
+
+  function handleInput(text) {
+    if (step === 0) {
+      booking.day = text;
+      botReply("Great — what time works for you?");
+      step = 1;
+    } else if (step === 1) {
+      booking.time = text;
+      const link = `https://wa.me/447825954329?text=Hi%2C%20I%27d%20like%20to%20book%20a%20session%20on%20${encodeURIComponent(booking.day)}%20at%20${encodeURIComponent(booking.time)}.%20Is%20that%20still%20available%3F`;
+      botReply("One sec...");
+      setTimeout(() => {
+        botReply(`✅ Booking link ready. Tap below to message me on WhatsApp: <br><a href="${link}" target="_blank" style="color:#00ffff;">📲 Message Gloves Up</a>`);
+        step = 2;
+      }, 1000);
+    } else {
+      botReply("Want to book another? Just type the new day 🥊");
+      step = 0;
     }
+  }
 
-    function saveSessions() {
-      const sessionText = document.getElementById("sessionText").value;
-      localStorage.setItem("weeklySessions", sessionText);
-      document.getElementById("saveStatus").innerText = "✅ Schedule saved.";
-    }
+  // Optional Quick Reply Buttons
+  function addQuickButtons() {
+    const days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    days.forEach(day => {
+      const btn = document.createElement("button");
+      btn.className = "quick-btn";
+      btn.innerText = day;
+      btn.onclick = () => {
+        input.value = day;
+        sendMessage();
+      };
+      document.getElementById("input-area").appendChild(btn);
+    });
+  }
 
-    function saveStats() {
-      const stats = document.getElementById("sellerStats").value;
-      localStorage.setItem("sellerStats", stats);
-      document.getElementById("statsSaved").innerText = "✅ Stats saved.";
-    }
-
-    // Auto-fill saved data on load
-    window.onload = () => {
-      document.getElementById("sessionText").value = localStorage.getItem("weeklySessions") || "";
-      document.getElementById("sellerStats").value = localStorage.getItem("sellerStats") || "";
-    };
-  </script>
-<a href="assistant.html" class="admin-button">🧠 Try Hydra AI Assistant</a>
+  // Add buttons after greeting
+  setTimeout(() => addQuickButtons(), 1000);
+</script>
 
 </body>
 </html>

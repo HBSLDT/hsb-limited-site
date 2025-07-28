@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydra AI Assistant</title>
+  <style>
+    body {
+      background: #000;
+      color: #eee;
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    header {
+      background: #111;
+      padding: 20px;
+      text-align: center;
+      font-size: 24px;
+      color: #FFD700;
+      font-weight: bold;
+    }
+
+    .chat-container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #1a1a1a;
+      border-radius: 12px;
+      box-shadow: 0 0 20px #111;
+      padding: 20px;
+    }
+
+    .chat-log {
+      height: 300px;
+      overflow-y: auto;
+      padding: 10px;
+      background: #111;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .chat-log div {
+      margin-bottom: 10px;
+    }
+
+    .input-area {
+      display: flex;
+      gap: 10px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      background: #333;
+      color: #fff;
+    }
+
+    button {
+      padding: 10px 20px;
+      background: #FFD700;
+      color: black;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .back {
+      display: block;
+      margin: 30px auto 10px;
+      text-align: center;
+      color: #888;
+      text-decoration: none;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>🤖 Hydra AI Assistant</header>
+
+  <div class="chat-container">
+    <div class="chat-log" id="chatLog">
+      <div><b>Hydra AI:</b> Welcome to HQ. What do you want help with?</div>
+    </div>
+    <div class="input-area">
+      <input type="text" id="userInput" placeholder="Ask a question..." />
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <a href="index.html" class="back">⬅ Back to Hydra HQ</a>
+
+  <script>
+    const chatLog = document.getElementById("chatLog");
+    const input = document.getElementById("userInput");
+
+    function sendMessage() {
+      const message = input.value.trim();
+      if (!message) return;
+
+      appendMessage("You", message);
+      const reply = getAIResponse(message);
+      appendMessage("Hydra AI", reply);
+      input.value = "";
+    }
+
+    function appendMessage(sender, text) {
+      chatLog.innerHTML += `<div><b>${sender}:</b> ${text}</div>`;
+      chatLog.scrollTop = chatLog.scrollHeight;
+    }
+
+    function getAIResponse(input) {
+      const msg = input.toLowerCase();
+      if (msg.includes("book") || msg.includes("session")) {
+        return "To book a session, just say your preferred day/time. I’ll help you next.";
+      }
+      if (msg.includes("gloves up")) {
+        return "Gloves Up is personal 1:1 boxing training. Sessions are £30/hour. Want to book?";
+      }
+      if (msg.includes("sales up")) {
+        return "Sales Up helps you earn cash selling sessions. I can give you the seller guide.";
+      }
+      if (msg.includes("no excuse")) {
+        return "No Excuse Fitness is your 6-week boxing plan. Want the training link?";
+      }
+      if (msg.includes("price")) {
+        return "Sessions are £30/hr. First session 50% off. Free taster available!";
+      }
+      if (msg.includes("hi") || msg.includes("hello")) {
+        return "Hey there 👊 I’m Hydra AI. Ask me anything about training, booking, or selling.";
+      }
+      return "Sorry, I didn’t get that — ask me about booking, Gloves Up, Sales Up, or NEF.";
+    }
+  </script>
+
+</body>
+</html>

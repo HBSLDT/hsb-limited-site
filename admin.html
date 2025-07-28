@@ -57,6 +57,19 @@
     .upload-zone:hover {
       border-color: #FFD700;
     }
+    table {
+      width: 100%;
+      margin-top: 20px;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #333;
+      padding: 10px;
+      text-align: center;
+    }
+    th {
+      background-color: #222;
+    }
   </style>
 </head>
 <body>
@@ -78,41 +91,95 @@
     <label for="sellerCode">Referral Code</label>
     <input type="text" id="sellerCode" placeholder="e.g. DR35741">
 
-    <button onclick="saveSeller()">Save Seller Data</button>
+    <button onclick="saveSeller()">💾 Save Seller Data</button>
+
+    <table id="sellerTable">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Sales</th>
+          <th>£ Earnings</th>
+          <th>Code</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
   </div>
 
   <!-- Session Updates -->
   <div class="section">
     <h2>🗓️ Edit Weekly Session Times</h2>
     <label for="sessionText">Session Availability</label>
-    <textarea id="sessionText" rows="6" placeholder="Mon: 7AM–10AM, 1PM–4PM..."></textarea>
-    <button onclick="saveSessions()">Save Sessions</button>
+    <textarea id="sessionText" rows="6" placeholder="Mon: 7AM–10AM..."></textarea>
+    <button onclick="saveSessions()">📝 Save Sessions</button>
+    <p id="savedSessions" style="margin-top: 10px;"></p>
   </div>
 
-  <!-- Upload Contracts -->
+  <!-- Upload Contracts (Simulation) -->
   <div class="section">
     <h2>📎 Upload Signed Contracts</h2>
-    <label for="contractUpload">Select a file (PDF or Image)</label>
     <input type="file" id="contractUpload" accept=".pdf,.jpg,.jpeg,.png">
     <div class="upload-zone">📂 Drag and drop or click above to select a file</div>
-    <button onclick="uploadContract()">Upload Contract</button>
+    <button onclick="uploadContract()">⬆️ Upload Contract</button>
   </div>
 
   <script>
+    let sellers = JSON.parse(localStorage.getItem("sellers")) || [];
+
     function saveSeller() {
-      alert("✅ Seller data saved (simulation). Make this live with real backend later.");
+      const name = document.getElementById('sellerName').value.trim();
+      const sales = document.getElementById('salesCount').value.trim();
+      const earnings = document.getElementById('earnings').value.trim();
+      const code = document.getElementById('sellerCode').value.trim();
+
+      if (!name || !sales || !earnings || !code) return alert("Fill in all fields!");
+
+      sellers.push({ name, sales, earnings, code });
+      localStorage.setItem("sellers", JSON.stringify(sellers));
+      renderSellerTable();
+      clearInputs();
+    }
+
+    function renderSellerTable() {
+      const tableBody = document.querySelector("#sellerTable tbody");
+      tableBody.innerHTML = "";
+      sellers.forEach(s => {
+        const row = `<tr>
+          <td>${s.name}</td>
+          <td>${s.sales}</td>
+          <td>£${s.earnings}</td>
+          <td>${s.code}</td>
+        </tr>`;
+        tableBody.innerHTML += row;
+      });
+    }
+
+    function clearInputs() {
+      document.getElementById('sellerName').value = "";
+      document.getElementById('salesCount').value = "";
+      document.getElementById('earnings').value = "";
+      document.getElementById('sellerCode').value = "";
     }
 
     function saveSessions() {
-      alert("✅ Session times updated (simulation).");
+      const sessionData = document.getElementById('sessionText').value;
+      localStorage.setItem("sessions", sessionData);
+      document.getElementById("savedSessions").innerText = "✅ " + sessionData;
     }
 
     function uploadContract() {
       const fileInput = document.getElementById('contractUpload');
-      if (fileInput.files.length === 0) {
-        alert("⚠️ No file selected.");
-      } else {
-        alert("✅ File uploaded successfully (simulation).");
+      if (!fileInput.files.length) return alert("Select a file!");
+      alert("✅ File uploaded (fake simulation). Upgrade this later with file backend.");
+    }
+
+    // Load everything on page load
+    window.onload = () => {
+      renderSellerTable();
+      const savedSessions = localStorage.getItem("sessions");
+      if (savedSessions) {
+        document.getElementById("sessionText").value = savedSessions;
+        document.getElementById("savedSessions").innerText = "✅ " + savedSessions;
       }
     }
   </script>

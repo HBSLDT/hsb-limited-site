@@ -1,1 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydra Admin Panel</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0a0a0a;
+      color: #eee;
+      margin: 0;
+      padding: 20px;
+    }
+    h1, h2 {
+      text-align: center;
+    }
+    .section {
+      background: #111;
+      padding: 20px;
+      margin-bottom: 30px;
+      border-radius: 8px;
+    }
+    input[type="password"],
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      background: #222;
+      color: #fff;
+      border: 1px solid #444;
+      border-radius: 5px;
+    }
+    button {
+      padding: 10px 20px;
+      background: #444;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #666;
+    }
+    .hidden {
+      display: none;
+    }
+    .file-upload {
+      margin-top: 10px;
+    }
+    a.return-home {
+      display: inline-block;
+      margin-top: 30px;
+      text-align: center;
+      background: #333;
+      color: #fff;
+      padding: 10px 20px;
+      text-decoration: none;
+      border-radius: 6px;
+    }
+    a.return-home:hover {
+      background: #555;
+    }
+  </style>
+</head>
+<body>
 
+  <div id="loginSection" class="section">
+    <h1>Admin Login</h1>
+    <input type="password" id="adminCode" placeholder="Enter Admin Code">
+    <button onclick="checkCode()">Login</button>
+    <p id="loginError" style="color: red;"></p>
+  </div>
+
+  <div id="adminPanel" class="hidden">
+
+    <div class="section">
+      <h2>🗓 Edit Weekly Sessions</h2>
+      <textarea id="sessionText" rows="10" placeholder="Paste session schedule here..."></textarea>
+      <button onclick="saveSessions()">Save Schedule</button>
+      <p id="saveStatus"></p>
+    </div>
+
+    <div class="section">
+      <h2>📊 Seller Performance</h2>
+      <input type="text" id="sellerStats" placeholder="E.g. Reece: 14 sales – £420">
+      <button onclick="saveStats()">Save Stats</button>
+      <p id="statsSaved"></p>
+    </div>
+
+    <div class="section">
+      <h2>📁 Upload Contracts</h2>
+      <input type="file" class="file-upload" id="contractUpload">
+      <p>Note: File uploads are local only (not stored online).</p>
+    </div>
+
+    <div style="text-align:center;">
+      <a href="index.html" class="return-home">🏠 Return to Hydra HQ</a>
+    </div>
+
+  </div>
+
+  <script>
+    function checkCode() {
+      const input = document.getElementById("adminCode").value;
+      if (input === "HBS123") {
+        document.getElementById("loginSection").classList.add("hidden");
+        document.getElementById("adminPanel").classList.remove("hidden");
+      } else {
+        document.getElementById("loginError").innerText = "Incorrect code. Try again.";
+      }
+    }
+
+    function saveSessions() {
+      const sessionText = document.getElementById("sessionText").value;
+      localStorage.setItem("weeklySessions", sessionText);
+      document.getElementById("saveStatus").innerText = "✅ Schedule saved.";
+    }
+
+    function saveStats() {
+      const stats = document.getElementById("sellerStats").value;
+      localStorage.setItem("sellerStats", stats);
+      document.getElementById("statsSaved").innerText = "✅ Stats saved.";
+    }
+
+    // Auto-fill saved data on load
+    window.onload = () => {
+      document.getElementById("sessionText").value = localStorage.getItem("weeklySessions") || "";
+      document.getElementById("sellerStats").value = localStorage.getItem("sellerStats") || "";
+    };
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydra HQ Control Panel</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #000;
+      color: #fff;
+      padding: 20px;
+    }
+    header {
+      background: linear-gradient(to right, #111, #333);
+      padding: 20px;
+      font-size: 28px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .section {
+      margin-top: 40px;
+      background-color: #111;
+      padding: 20px;
+      border: 1px solid #333;
+      border-radius: 10px;
+    }
+    h2 {
+      border-bottom: 1px solid #444;
+      padding-bottom: 8px;
+    }
+    .link-button {
+      display: inline-block;
+      background: #444;
+      color: white;
+      padding: 10px 20px;
+      margin: 10px 5px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .link-button:hover {
+      background: #666;
+    }
+    footer {
+      margin-top: 60px;
+      text-align: center;
+      color: #666;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <header>🧠 HYDRA HQ ADMIN DASHBOARD</header>
+
+  <div class="section">
+    <h2>📅 Weekly Sessions Manager</h2>
+    <p>Update session times or view current schedule:</p>
+    <a href="admin.html" class="link-button">Edit Sessions</a>
+    <a href="index.html" class="link-button">Live Public Site</a>
+  </div>
+
+  <div class="section">
+    <h2>💼 Seller Performance & Contracts</h2>
+    <p>Track performance, update stats, upload/view contracts:</p>
+    <a href="stats.html" class="link-button">View Stats & Contracts</a>
+  </div>
+
+  <div class="section">
+    <h2>🚀 Add New Features</h2>
+    <p>Want to add client logins, team dashboards, earnings charts, or booking forms?</p>
+    <a href="#" class="link-button" onclick="alert('More features coming soon!')">Suggest a Feature</a>
+  </div>
+
+  <footer>
+    Powered by HBS Ltd – Hydra Empire Systems © 2025
+  </footer>
+
+</body>
+</html>

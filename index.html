@@ -3,86 +3,40 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Hydra HQ – Gloves Up, Sales Up, No Excuse Fitness</title>
+  <title>Hydra HQ</title>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
   <style>
     body {
       margin: 0;
-      font-family: 'Arial', sans-serif;
-      background-color: #000;
+      font-family: 'Montserrat', sans-serif;
+      background: linear-gradient(to bottom right, #000000, #121212);
       color: #eee;
-      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
     }
     header {
-      background: linear-gradient(90deg, #888, #444);
+      background: #111;
       padding: 20px;
       text-align: center;
-      font-size: 24px;
+      font-size: 28px;
       font-weight: bold;
+      letter-spacing: 1px;
     }
-    h2 {
-      margin-top: 30px;
-      border-bottom: 2px solid #444;
-      padding-bottom: 10px;
+    .hydra-logo {
+      width: 100px;
+      height: auto;
+      margin: 10px auto;
     }
-    pre {
-      white-space: pre-wrap;
-      background-color: #111;
-      padding: 15px;
-      border-radius: 6px;
-      border: 1px solid #333;
+    nav {
+      display: flex;
+      justify-content: center;
+      background: #1a1a1a;
+      padding: 10px 0;
     }
-    .section {
-      margin-bottom: 40px;
-    }
-    .file-status {
-      color: lime;
-      font-size: 14px;
-    }
-    .admin-link {
-      display: inline-block;
-      margin-top: 20px;
-      background: #444;
-      padding: 10px 20px;
-      border-radius: 6px;
-      text-decoration: none;
+    nav a {
       color: #eee;
-    }
-  </style>
-</head>
-<body>
-  <header>🔥 HYDRA HQ OFFICIAL SITE 🔥</header>
-
-  <div class="section">
-    <h2>🥊 Weekly Session Schedule</h2>
-    <pre id="scheduleOutput">Loading schedule...</pre>
-  </div>
-
-  <div class="section">
-    <h2>💼 Seller Performance</h2>
-    <pre id="statsOutput">Loading seller stats...</pre>
-  </div>
-
-  <div class="section">
-    <h2>📁 Uploaded Contracts</h2>
-    <div class="file-status" id="fileStatus">File uploaded successfully ✅</div>
-  </div>
-
-  <a class="admin-link" href="/admin.html">Go to Admin Panel</a>
-
-  <script>
-    // Load saved schedule
-    const schedule = localStorage.getItem('weeklySchedule');
-    document.getElementById('scheduleOutput').textContent = schedule || 'No schedule available.';
-
-    // Load saved stats
-    const stats = localStorage.getItem('sellerStats');
-    document.getElementById('statsOutput').textContent = stats || 'No stats available.';
-
-    // Show if file uploaded
-    const contractUploaded = localStorage.getItem('contractUploaded');
-    if (!contractUploaded) {
-      document.getElementById('fileStatus').textContent = 'No contracts uploaded yet.';
-    }
-  </script>
-</body>
-</html>
+      text-decoration: none;
+      margin: 0 20px;
+      font-size: 16px;
+     

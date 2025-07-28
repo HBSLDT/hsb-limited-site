@@ -2,58 +2,173 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Admin Override – Hydra HQ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hydra Admin Panel</title>
   <style>
     body {
-      background: #000;
-      color: white;
+      margin: 0;
       font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to right, #000000, #111111);
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    h1 {
+      margin-top: 0;
+      font-size: 2.5rem;
+      color: #00ffff;
+    }
+
+    #login-box {
+      background: #1a1a1a;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.3);
       text-align: center;
-      padding-top: 60px;
     }
-    input {
+
+    input[type="password"],
+    input[type="time"],
+    select {
+      width: 80%;
       padding: 10px;
-      font-size: 1em;
-      margin: 10px;
-      border-radius: 5px;
+      margin: 10px 0;
       border: none;
-      width: 250px;
+      border-radius: 5px;
+      background: #333;
+      color: #eee;
     }
+
     button {
-      padding: 10px 20px;
-      font-size: 1em;
+      padding: 10px 25px;
+      background: #00ffff;
       border: none;
       border-radius: 5px;
-      background: #00ffff;
-      color: black;
+      font-weight: bold;
+      color: #000;
       cursor: pointer;
+      transition: background 0.3s ease;
     }
-    #output {
-      margin-top: 20px;
-      font-size: 0.9em;
-      color: lime;
+
+    button:hover {
+      background: #00cccc;
+    }
+
+    #admin-content {
+      display: none;
+      max-width: 500px;
+      margin-top: 30px;
+      background: #141414;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    li {
+      margin-bottom: 5px;
+      font-size: 15px;
+    }
+
+    label {
+      display: block;
+      text-align: left;
+      margin-top: 10px;
+    }
+
+    .success-msg {
+      color: #00ff00;
+      margin-top: 15px;
     }
   </style>
 </head>
 <body>
   <h1>Hydra Admin Panel</h1>
-  <p>Enter code to unlock:</p>
-  <input type="password" id="code" placeholder="Enter code..." />
-  <br>
-  <button onclick="checkCode()">Login</button>
-  <div id="output"></div>
+
+  <div id="login-box">
+    <p>Enter admin code to unlock panel:</p>
+    <input type="password" id="codeInput" placeholder="Enter code..." />
+    <br />
+    <button onclick="checkCode()">Login</button>
+    <p id="login-status" class="success-msg"></p>
+  </div>
+
+  <div id="admin-content">
+    <h2>📅 Edit Session Availability</h2>
+    <form id="availability-form">
+      <label for="day">Day:</label>
+      <select id="day">
+        <option>Monday</option>
+        <option>Tuesday</option>
+        <option>Wednesday</option>
+        <option>Thursday</option>
+        <option>Friday</option>
+        <option>Saturday</option>
+      </select>
+
+      <label for="start">Start Time:</label>
+      <input type="time" id="start" />
+
+      <label for="end">End Time:</label>
+      <input type="time" id="end" />
+
+      <button type="submit">Save Time Slot</button>
+    </form>
+
+    <h3>✅ Current Availability:</h3>
+    <ul id="availability-list"></ul>
+  </div>
 
   <script>
+    const correctCode = "HBS123";
+    const loginBox = document.getElementById("login-box");
+    const adminContent = document.getElementById("admin-content");
+    const loginStatus = document.getElementById("login-status");
+    const availabilityForm = document.getElementById("availability-form");
+    const availabilityList = document.getElementById("availability-list");
+    let savedSlots = [];
+
     function checkCode() {
-      const correct = "hydra777";
-      const input = document.getElementById("code").value;
-      const out = document.getElementById("output");
-      if (input === correct) {
-        out.innerHTML = "✅ Access granted. You may now edit times in availability.js";
+      const input = document.getElementById("codeInput").value.trim();
+      if (input === correctCode) {
+        loginBox.style.display = "none";
+        adminContent.style.display = "block";
+        loginStatus.textContent = "";
       } else {
-        out.innerHTML = "❌ Incorrect code. Try again.";
+        loginStatus.textContent = "❌ Incorrect code.";
       }
+    }
+
+    if (availabilityForm) {
+      availabilityForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+        const day = document.getElementById("day").value;
+        const start = document.getElementById("start").value;
+        const end = document.getElementById("end").value;
+        if (start && end) {
+          const slot = `${day}: ${start}–${end}`;
+          savedSlots.push(slot);
+          updateList();
+        }
+      });
+    }
+
+    function updateList() {
+      availabilityList.innerHTML = "";
+      savedSlots.forEach(slot => {
+        const li = document.createElement("li");
+        li.textContent = slot;
+        availabilityList.appendChild(li);
+      });
     }
   </script>
 </body>
 </html>
+

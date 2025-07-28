@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Seller Code Manager | Hydra HQ</title>
+  <style>
+    body {
+      background: #0b0b0b;
+      color: #eee;
+      font-family: 'Arial', sans-serif;
+      padding: 30px;
+    }
+    h1 {
+      text-align: center;
+      font-size: 24px;
+    }
+    .seller-entry {
+      background: #1a1a1a;
+      padding: 15px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .seller-entry h2 {
+      margin: 0 0 10px;
+    }
+    .seller-entry input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      background: #222;
+      border: none;
+      color: #fff;
+      border-radius: 6px;
+    }
+    .button {
+      background: #444;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .button:hover {
+      background: #666;
+    }
+    .seller-list {
+      margin-top: 40px;
+    }
+    a.back {
+      color: #00f0ff;
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧠 Seller Code Manager</h1>
+
+  <div class="seller-entry">
+    <h2>Add / Update Seller</h2>
+    <input type="text" id="sellerName" placeholder="Seller Name">
+    <input type="text" id="sellerCode" placeholder="Seller Code">
+    <input type="number" id="sellerSales" placeholder="Sales Made">
+    <input type="text" id="sellerEarnings" placeholder="Total Earnings (£)">
+    <button class="button" onclick="saveSeller()">💾 Save Seller</button>
+  </div>
+
+  <div class="seller-list" id="sellerList">
+    <h2>🧾 Seller Performance Log</h2>
+  </div>
+
+  <a href="admin.html" class="back">⬅️ Return to Admin Panel</a>
+
+  <script>
+    const sellerList = JSON.parse(localStorage.getItem("sellers") || "[]");
+
+    function saveSeller() {
+      const name = document.getElementById("sellerName").value.trim();
+      const code = document.getElementById("sellerCode").value.trim();
+      const sales = document.getElementById("sellerSales").value;
+      const earnings = document.getElementById("sellerEarnings").value;
+
+      if (!name || !code) return alert("Please enter both name and code.");
+
+      const index = sellerList.findIndex(s => s.code === code);
+
+      const sellerData = {
+        name,
+        code,
+        sales,
+        earnings
+      };
+
+      if (index >= 0) {
+        sellerList[index] = sellerData;
+      } else {
+        sellerList.push(sellerData);
+      }
+
+      localStorage.setItem("sellers", JSON.stringify(sellerList));
+      renderSellerList();
+      clearInputs();
+    }
+
+    function renderSellerList() {
+      const container = document.getElementById("sellerList");
+      container.innerHTML = '<h2>🧾 Seller Performance Log</h2>';
+
+      if (sellerList.length === 0) {
+        container.innerHTML += "<p>No sellers yet.</p>";
+        return;
+      }
+
+      sellerList.forEach(seller => {
+        container.innerHTML += `
+          <div style="margin-bottom:15px;">
+            <strong>👤 ${seller.name}</strong><br>
+            🔐 Code: ${seller.code}<br>
+            🧮 Sales: ${seller.sales}<br>
+            💸 Earnings: £${seller.earnings}
+          </div>
+        `;
+      });
+    }
+
+    function clearInputs() {
+      document.getElementById("sellerName").value = "";
+      document.getElementById("sellerCode").value = "";
+      document.getElementById("sellerSales").value = "";
+      document.getElementById("sellerEarnings").value = "";
+    }
+
+    renderSellerList();
+  </script>
+
+</body>
+</html>

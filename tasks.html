@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hydra HQ – Task Control Panel</title>
+  <style>
+    body {
+      margin: 0;
+      background: #000;
+      color: #eee;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 30px;
+    }
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    .section {
+      margin-bottom: 40px;
+    }
+    textarea, input {
+      width: 100%;
+      background: #111;
+      color: white;
+      padding: 10px;
+      border: 1px solid #444;
+      margin-top: 10px;
+      border-radius: 6px;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      padding: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #333;
+    }
+    .btn {
+      padding: 8px 16px;
+      background-color: #444;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    .btn:hover {
+      background-color: #666;
+    }
+    .back {
+      display: inline-block;
+      margin-top: 30px;
+      text-decoration: none;
+      color: #aaa;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🧠 Hydra Admin Mission Board</h1>
+
+  <!-- Weekly Task List -->
+  <div class="section">
+    <h2>✅ Weekly Task Tracker</h2>
+    <input type="text" id="taskInput" placeholder="New Task...">
+    <button class="btn" onclick="addTask()">Add Task</button>
+    <ul id="taskList"></ul>
+  </div>
+
+  <!-- Notes Panel -->
+  <div class="section">
+    <h2>📝 Quick Notes</h2>
+    <textarea rows="6" id="notesBox" placeholder="Write thoughts, goals or quick ideas here..."></textarea>
+    <button class="btn" onclick="saveNotes()">Save Notes</button>
+  </div>
+
+  <!-- Bug/Issue Tracker -->
+  <div class="section">
+    <h2>🐞 Bugs or Fixes</h2>
+    <textarea rows="4" id="bugBox" placeholder="Report a bug or note what needs fixing..."></textarea>
+    <button class="btn" onclick="saveBugs()">Save Bug Log</button>
+  </div>
+
+  <a class="back" href="dashboard.html">← Return to Admin Control Panel</a>
+
+  <script>
+    // Load saved notes/tasks
+    window.onload = () => {
+      taskList.innerHTML = localStorage.getItem("tasks") || "";
+      notesBox.value = localStorage.getItem("notes") || "";
+      bugBox.value = localStorage.getItem("bugs") || "";
+    }
+
+    function addTask() {
+      const input = document.getElementById("taskInput");
+      const task = input.value.trim();
+      if (task !== "") {
+        const li = document.createElement("li");
+        li.innerHTML = `${task} <button onclick="removeTask(this)">❌</button>`;
+        document.getElementById("taskList").appendChild(li);
+        saveTasks();
+        input.value = "";
+      }
+    }
+
+    function removeTask(btn) {
+      btn.parentElement.remove();
+      saveTasks();
+    }
+
+    function saveTasks() {
+      localStorage.setItem("tasks", document.getElementById("taskList").innerHTML);
+    }
+
+    function saveNotes() {
+      localStorage.setItem("notes", document.getElementById("notesBox").value);
+      alert("📝 Notes saved");
+    }
+
+    function saveBugs() {
+      localStorage.setItem("bugs", document.getElementById("bugBox").value);
+      alert("🐞 Bug log saved");
+    }
+  </script>
+
+</body>
+</html>
